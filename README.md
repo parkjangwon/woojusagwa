@@ -1,5 +1,7 @@
 # 우주사과
 
+<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/2cff19da-9278-4920-ba69-334ca185931a" />
+
 <div align="center">
   <p>
     <strong>한국어</strong> |
