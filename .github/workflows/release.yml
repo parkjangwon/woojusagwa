@@ -19,11 +19,18 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+      - name: Generate Gradle Wrapper JAR
+        run: |
+          cd android
+          # 만약 jar가 없으면 gradle wrapper를 강제 실행하여 생성 시도
+          # ubuntu runner에는 gradle이 기본 설치되어 있음
+          gradle wrapper --gradle-version 8.2
+
       - name: Build with Gradle
         run: |
           cd android
-          # gradlew가 없을 경우를 대비해 gradle 직접 설치 또는 wrapper 생성 시도
-          gradle assembleRelease
+          chmod +x gradlew
+          ./gradlew assembleRelease
 
       - name: Upload Android Artifact
         uses: actions/upload-artifact@v4
