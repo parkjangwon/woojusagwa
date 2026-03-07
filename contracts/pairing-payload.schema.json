@@ -5,7 +5,9 @@
   "required": [
     "version",
     "server",
-    "topic"
+    "topic",
+    "device_id",
+    "device_name"
   ],
   "properties": {
     "version": {
@@ -17,7 +19,10 @@
     "topic": {
       "type": "string"
     },
-    "deviceName": {
+    "device_id": {
+      "type": "string"
+    },
+    "device_name": {
       "type": "string"
     }
   }

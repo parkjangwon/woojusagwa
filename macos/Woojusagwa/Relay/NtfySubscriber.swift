@@ -2,29 +2,71 @@ import Foundation
 import Combine
 import AppKit
 
+enum SubscriberConnectionStatus {
+    case readyToPair
+    case disconnected
+    case connecting
+    case listening
+    case receiving
+    case relayError
+    case relayPayloadError
+
+    var localizedLabel: String {
+        switch self {
+        case .readyToPair:
+            return AppText.pick(ko: "페어링 준비됨", en: "Ready to pair")
+        case .disconnected:
+            return AppText.pick(ko: "연결 해제됨", en: "Disconnected")
+        case .connecting:
+            return AppText.pick(ko: "연결 중", en: "Connecting")
+        case .listening:
+            return AppText.pick(ko: "ntfy 수신 대기 중", en: "Listening on ntfy")
+        case .receiving:
+            return AppText.pick(ko: "메시지 수신 중", en: "Receiving messages")
+        case .relayError:
+            return AppText.pick(ko: "릴레이 오류", en: "Relay error")
+        case .relayPayloadError:
+            return AppText.pick(ko: "릴레이 페이로드 오류", en: "Relay payload error")
+        }
+    }
+}
+
 final class NtfySubscriber: ObservableObject {
-    @Published private(set) var connectionStatus: String
+    @Published private(set) var connectionStatus: SubscriberConnectionStatus
     @Published private(set) var lastMessage: String
     @Published private(set) var topicLabel: String
     @Published private(set) var notificationAuthorizationStatus: String
+    @Published private(set) var deviceNameLabel: String
+    @Published private(set) var deviceIdLabel: String
+    @Published private(set) var appVersionLabel: String
 
     private var urlSession: URLSession?
     private var dataTask: URLSessionDataTask?
     private let pairingStore: PairingConfigurationStore
     private let notificationManager: NotificationManager
+    private let deviceIdentityStore: DeviceIdentityStore
+    private let appVersionProvider: () -> String
     private let relayDecoder = RelayEnvelopeDecoder()
     private var cancellables = Set<AnyCancellable>()
 
     init(
         pairingStore: PairingConfigurationStore,
-        notificationManager: NotificationManager
+        notificationManager: NotificationManager,
+        deviceIdentityStore: DeviceIdentityStore,
+        appVersionProvider: @escaping () -> String = NtfySubscriber.defaultVersionLabel
     ) {
+        let identity = deviceIdentityStore.currentIdentity()
         self.pairingStore = pairingStore
         self.notificationManager = notificationManager
-        self.connectionStatus = "Ready to pair"
-        self.lastMessage = "No messages yet"
-        self.topicLabel = "Not paired"
+        self.deviceIdentityStore = deviceIdentityStore
+        self.appVersionProvider = appVersionProvider
+        self.connectionStatus = .readyToPair
+        self.lastMessage = ""
+        self.topicLabel = ""
         self.notificationAuthorizationStatus = notificationManager.authorizationStatusText
+        self.deviceNameLabel = identity.deviceName
+        self.deviceIdLabel = identity.deviceId
+        self.appVersionLabel = appVersionProvider()
 
         notificationManager.$authorizationStatusText
             .receive(on: DispatchQueue.main)
@@ -37,13 +79,18 @@ final class NtfySubscriber: ObservableObject {
     }
     
     func prepareFreshPairingPayload() throws -> String {
-        let payload = try PairingPayload(topic: makeTopic())
+        let identity = deviceIdentityStore.currentIdentity()
+        let payload = try PairingPayload(
+            topic: makeTopic(),
+            deviceId: identity.deviceId,
+            deviceName: identity.deviceName
+        )
         try connect(using: payload)
         return try payload.encodedJSONString()
     }
 
     func copyLastMessage() {
-        guard !lastMessage.isEmpty, lastMessage != "No messages yet" else {
+        guard !lastMessage.isEmpty else {
             return
         }
 
@@ -57,7 +104,7 @@ final class NtfySubscriber: ObservableObject {
         dataTask = nil
         urlSession?.invalidateAndCancel()
         urlSession = nil
-        connectionStatus = "Disconnected"
+        connectionStatus = .disconnected
     }
 
     func sendTestNotification() {
@@ -83,6 +130,11 @@ final class NtfySubscriber: ObservableObject {
     }
 
     private func restorePairingIfAvailable() {
+        let identity = deviceIdentityStore.currentIdentity()
+        deviceNameLabel = identity.deviceName
+        deviceIdLabel = identity.deviceId
+        appVersionLabel = appVersionProvider()
+
         guard let payload = try? pairingStore.load() else {
             return
         }
@@ -98,7 +150,7 @@ final class NtfySubscriber: ObservableObject {
         let urlString = "\(server)/\(topic)/json"
         guard let url = URL(string: urlString) else { return }
         
-        connectionStatus = "Connecting..."
+        connectionStatus = .connecting
         
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = TimeInterval(Double.infinity)
@@ -111,7 +163,7 @@ final class NtfySubscriber: ObservableObject {
         dataTask = urlSession?.dataTask(with: url)
         dataTask?.resume()
         
-        connectionStatus = "Listening on ntfy"
+        connectionStatus = .listening
     }
     
     private func handleIncomingLine(_ line: String) {
@@ -121,12 +173,12 @@ final class NtfySubscriber: ObservableObject {
 
             DispatchQueue.main.async {
                 self.lastMessage = summary
-                self.connectionStatus = "Receiving messages"
+                self.connectionStatus = .receiving
                 self.notificationManager.show(title: payload.title, body: payload.body)
             }
         } catch {
             guard let relayError = error as? RelayEnvelopeError else {
-                connectionStatus = "Relay error"
+                connectionStatus = .relayError
                 return
             }
 
@@ -134,7 +186,7 @@ final class NtfySubscriber: ObservableObject {
             case .invalidEnvelope, .missingMessage:
                 break
             case .invalidPayload:
-                connectionStatus = "Relay payload error"
+                connectionStatus = .relayPayloadError
             }
         }
     }
@@ -142,6 +194,13 @@ final class NtfySubscriber: ObservableObject {
     private func makeTopic() -> String {
         let raw = UUID().uuidString.replacingOccurrences(of: "-", with: "").lowercased()
         return "ws_\(raw.prefix(12))"
+    }
+
+    private static func defaultVersionLabel() -> String {
+        let infoDictionary = Bundle.main.infoDictionary
+        let version = infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+        let build = infoDictionary?["CFBundleVersion"] as? String ?? "1"
+        return AppText.versionLabel(version: version, build: build)
     }
 }
 

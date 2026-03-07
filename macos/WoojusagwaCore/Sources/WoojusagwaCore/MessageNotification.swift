@@ -81,30 +81,54 @@ public struct MessageNotificationAuthorizationPlan {
     ) -> String {
         switch authorizationStatus {
         case .notDetermined:
-            return "알림 권한 필요"
+            return AppText.pick(
+                ko: "알림 권한 필요",
+                en: "Notification permission required"
+            )
         case .denied:
-            return "알림 꺼짐: macOS 설정에서 우주사과 알림을 허용해 주세요."
+            return AppText.pick(
+                ko: "알림 꺼짐: macOS 설정에서 우주사과 알림을 허용해 주세요.",
+                en: "Notifications are off. Allow Woojusagwa in macOS settings."
+            )
         case .provisional:
-            return "임시 허용 상태입니다. 알림 설정에서 배너 또는 알림으로 바꿔 주세요."
+            return AppText.pick(
+                ko: "임시 허용 상태입니다. 알림 설정에서 배너 또는 알림으로 바꿔 주세요.",
+                en: "Notifications are provisionally allowed. Switch to banners or alerts in settings."
+            )
         case .authorized, .ephemeral:
             let alertEnabled = alertSetting == .enabled
             let centerEnabled = notificationCenterSetting == .enabled
 
             if alertEnabled && centerEnabled {
-                return "배너와 알림센터 사용 가능"
+                return AppText.pick(
+                    ko: "배너와 알림센터 사용 가능",
+                    en: "Banners and Notification Center enabled"
+                )
             }
 
             if alertEnabled {
-                return "배너만 켜짐: 알림센터 저장은 꺼져 있을 수 있습니다."
+                return AppText.pick(
+                    ko: "배너만 켜짐: 알림센터 저장은 꺼져 있을 수 있습니다.",
+                    en: "Banners enabled. Notification Center may still be off."
+                )
             }
 
             if centerEnabled {
-                return "알림센터만 켜짐: 배너는 꺼져 있습니다."
+                return AppText.pick(
+                    ko: "알림센터만 켜짐: 배너는 꺼져 있습니다.",
+                    en: "Notification Center enabled. Banners are off."
+                )
             }
 
-            return "권한 있음, 하지만 배너/알림센터 표시가 꺼져 있습니다."
+            return AppText.pick(
+                ko: "권한 있음, 하지만 배너/알림센터 표시가 꺼져 있습니다.",
+                en: "Permission granted, but banners and Notification Center are off."
+            )
         @unknown default:
-            return "알림 상태를 확인할 수 없습니다."
+            return AppText.pick(
+                ko: "알림 상태를 확인할 수 없습니다.",
+                en: "Unable to determine notification status."
+            )
         }
     }
 }

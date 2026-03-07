@@ -9,5 +9,6 @@ android/app/build/
 macos/**/build/
 macos/WoojusagwaCore/.build/
 macos/**/*.xcuserdatad/
+macos/*.dmg
 
 DerivedData/

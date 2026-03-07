@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Woojusagwa</string>
+    <string name="app_subtitle">The smallest bridge from Galaxy SMS to multiple Macs</string>
+    <string name="action_scan_qr">Pair with a Mac (scan QR)</string>
+    <string name="action_open_notification_access">Open notification access</string>
+    <string name="action_remove_mac">Remove</string>
+    <string name="version_placeholder">Version 0.0.0 (0)</string>
+    <string name="version_value">Version %1$s (%2$d)</string>
+    <string name="qr_prompt">Scan Woojusagwa Mac QR</string>
+    <string name="status_not_paired">No Mac is paired yet. Open the menu bar app, show its QR, and scan it here.</string>
+    <string name="status_connected_summary">Paired Macs %1$d · Sending to %2$d</string>
+    <string name="status_invalid_qr">This is not a valid Woojusagwa QR. Generate a new QR from the Mac app and try again.</string>
+    <string name="section_paired_macs">Paired Macs</string>
+    <string name="paired_macs_empty">No Macs are paired yet. Show a QR on each Mac and scan them one by one.</string>
+    <string name="paired_mac_enabled_on">On</string>
+    <string name="paired_mac_enabled_off">Off</string>
+    <string name="paired_mac_topic_value">Topic: %1$s</string>
+    <string name="paired_mac_server_value">Server: %1$s</string>
+    <string name="permission_hint">Allow Woojusagwa in Settings → Notifications → Notification access to forward Samsung Messages and Google Messages alerts to your Mac.</string>
+    <string name="notification_sender_unknown">Unknown</string>
+</resources>

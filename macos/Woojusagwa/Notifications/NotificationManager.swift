@@ -4,7 +4,10 @@ import AppKit
 import Combine
 
 final class NotificationManager: NSObject, ObservableObject, UNUserNotificationCenterDelegate {
-    @Published private(set) var authorizationStatusText = "알림 권한 확인 중"
+    @Published private(set) var authorizationStatusText = AppText.pick(
+        ko: "알림 권한 확인 중",
+        en: "Checking notification permissions"
+    )
     @Published private(set) var notificationsEnabled = false
 
     private let center: UNUserNotificationCenter
@@ -58,8 +61,14 @@ final class NotificationManager: NSObject, ObservableObject, UNUserNotificationC
 
     func sendTestNotification() {
         show(
-            title: "우주사과 테스트",
-            body: "이 알림이 보이면 macOS 알림센터 연동이 정상입니다."
+            title: AppText.pick(
+                ko: "우주사과 테스트",
+                en: "Woojusagwa Test"
+            ),
+            body: AppText.pick(
+                ko: "이 알림이 보이면 macOS 알림센터 연동이 정상입니다.",
+                en: "If you can see this, macOS Notification Center is working."
+            )
         )
     }
 
@@ -158,7 +167,10 @@ final class NotificationManager: NSObject, ObservableObject, UNUserNotificationC
     private func configureCategories() {
         let copyAction = UNNotificationAction(
             identifier: MessageNotificationAction.copyOtpActionIdentifier,
-            title: "복사하기"
+            title: AppText.pick(
+                ko: "복사하기",
+                en: "Copy"
+            )
         )
         let category = UNNotificationCategory(
             identifier: MessageNotificationAction.categoryIdentifier,

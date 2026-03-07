@@ -1,11 +1,21 @@
 <resources>
     <string name="app_name">우주사과</string>
-    <string name="app_subtitle">Galaxy SMS를 Mac 알림으로 이어주는 가장 작은 브리지</string>
+    <string name="app_subtitle">Galaxy SMS를 여러 Mac 알림으로 이어주는 가장 작은 브리지</string>
     <string name="action_scan_qr">Mac과 페어링하기 (QR 스캔)</string>
     <string name="action_open_notification_access">알림 접근 권한 열기</string>
+    <string name="action_remove_mac">삭제</string>
+    <string name="version_placeholder">버전 0.0.0 (0)</string>
+    <string name="version_value">버전 %1$s (%2$d)</string>
+    <string name="qr_prompt">우주사과 Mac QR을 스캔하세요</string>
     <string name="status_not_paired">아직 Mac과 연결되지 않았습니다. 메뉴바 앱에서 QR을 띄운 뒤 스캔하세요.</string>
-    <string name="status_connected">연결됨\n서버: %1$s\n토픽: %2$s</string>
+    <string name="status_connected_summary">연결된 Mac %1$d대 · 알림 전송 %2$d대</string>
     <string name="status_invalid_qr">유효한 우주사과 QR이 아닙니다. Mac 앱에서 새 QR을 다시 생성하세요.</string>
+    <string name="section_paired_macs">연결된 Mac</string>
+    <string name="paired_macs_empty">아직 연결된 Mac이 없습니다. 각 Mac에서 QR을 띄워 하나씩 스캔하세요.</string>
+    <string name="paired_mac_enabled_on">켜짐</string>
+    <string name="paired_mac_enabled_off">꺼짐</string>
+    <string name="paired_mac_topic_value">토픽: %1$s</string>
+    <string name="paired_mac_server_value">서버: %1$s</string>
     <string name="permission_hint">설정 → 알림 → 알림 접근 권한에서 우주사과를 허용하면, 삼성 메시지와 Google Messages 알림이 Mac으로 전달됩니다.</string>
     <string name="notification_sender_unknown">Unknown</string>
 </resources>
