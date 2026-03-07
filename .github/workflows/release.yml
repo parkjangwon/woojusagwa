@@ -62,7 +62,13 @@ jobs:
                      CODE_SIGNING_ALLOWED=NO
 
           mkdir -p build/dmg
-          cp -R build/Build/Products/Release/우주사과.app build/dmg/
+          cp -R build/Build/Products/Release/Woojusagwa.app build/dmg/우주사과.app
+
+          # Ad-hoc sign the final renamed bundle so macOS sees a stable app identity
+          # while users still install "우주사과.app" from the DMG.
+          codesign --force --deep --sign - build/dmg/우주사과.app
+          codesign --verify --deep --strict build/dmg/우주사과.app
+
           ln -s /Applications build/dmg/Applications
 
           # Package into DMG

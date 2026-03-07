@@ -26,7 +26,7 @@
 		7E0655963985EAAB3F88228D /* RelayEnvelope.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RelayEnvelope.swift; path = ../WoojusagwaCore/Sources/WoojusagwaCore/RelayEnvelope.swift; sourceTree = "<group>"; };
 		C96A1210C10FB76FFB3706D1 /* MenuBarView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MenuBarView.swift; path = UI/MenuBarView.swift; sourceTree = "<group>"; };
 		CB1DFBEC0E54A8C29139234C /* PairingConfigurationStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PairingConfigurationStore.swift; path = ../WoojusagwaCore/Sources/WoojusagwaCore/PairingConfigurationStore.swift; sourceTree = "<group>"; };
-		D0BD6ACBB59F494CDAD26B48 /* 우주사과.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "우주사과.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0BD6ACBB59F494CDAD26B48 /* Woojusagwa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Woojusagwa.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD3AE85470CDA16E4EACDB62 /* PairingPayload.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PairingPayload.swift; path = ../WoojusagwaCore/Sources/WoojusagwaCore/PairingPayload.swift; sourceTree = "<group>"; };
 		EECED1262731DB8CB5D5C257 /* WoojusagwaApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WoojusagwaApp.swift; path = App/WoojusagwaApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -84,7 +84,7 @@
 		5FEBCA9990965AD15D8527CE /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D0BD6ACBB59F494CDAD26B48 /* 우주사과.app */,
+				D0BD6ACBB59F494CDAD26B48 /* Woojusagwa.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -158,7 +158,7 @@
 			);
 			name = Woojusagwa;
 			productName = "우주사과";
-			productReference = D0BD6ACBB59F494CDAD26B48 /* 우주사과.app */;
+			productReference = D0BD6ACBB59F494CDAD26B48 /* Woojusagwa.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -231,7 +231,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.parkjw.woojusagwa.macos;
-				PRODUCT_NAME = "우주사과";
+				PRODUCT_NAME = Woojusagwa;
 				SDKROOT = macosx;
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
@@ -367,7 +367,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.parkjw.woojusagwa.macos;
-				PRODUCT_NAME = "우주사과";
+				PRODUCT_NAME = Woojusagwa;
 				SDKROOT = macosx;
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
