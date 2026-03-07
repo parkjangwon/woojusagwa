@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Woojusagwa</string>
     <string name="app_subtitle">The smallest bridge from Galaxy SMS to multiple Macs</string>
+    <string name="section_language">Language</string>
+    <string name="language_korean">한국어</string>
+    <string name="language_english">English</string>
     <string name="action_scan_qr">Pair with a Mac (scan QR)</string>
     <string name="action_open_notification_access">Open notification access</string>
     <string name="action_remove_mac">Remove</string>

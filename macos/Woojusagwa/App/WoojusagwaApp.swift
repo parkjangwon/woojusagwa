@@ -5,6 +5,10 @@ struct WoojusagwaApp: App {
     @StateObject private var subscriber: NtfySubscriber
 
     init() {
+        let appLanguageStore = AppLanguageStore()
+        AppText.preferredLanguageCodeProvider = {
+            appLanguageStore.currentLanguage().tag
+        }
         let notificationManager = NotificationManager()
         let pairingStore = PairingConfigurationStore()
         let deviceIdentityStore = DeviceIdentityStore()
@@ -12,13 +16,21 @@ struct WoojusagwaApp: App {
             wrappedValue: NtfySubscriber(
                 pairingStore: pairingStore,
                 notificationManager: notificationManager,
-                deviceIdentityStore: deviceIdentityStore
+                deviceIdentityStore: deviceIdentityStore,
+                appLanguageStore: appLanguageStore
             )
         )
     }
     
     var body: some Scene {
-        MenuBarExtra(AppText.pick(ko: "우주사과", en: "Woojusagwa"), systemImage: "message.badge.waveform") {
+        MenuBarExtra(
+            AppText.pick(
+                ko: "우주사과",
+                en: "Woojusagwa",
+                languageCode: subscriber.selectedLanguage.tag
+            ),
+            systemImage: "message.badge.waveform"
+        ) {
             MenuBarView(subscriber: subscriber)
         }
         .menuBarExtraStyle(.window)

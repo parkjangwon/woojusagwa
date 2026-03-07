@@ -18,12 +18,12 @@ final class AppTextTests: XCTestCase {
 
     func testFormatsVersionLabelPerLanguage() {
         XCTAssertEqual(
-            AppText.versionLabel(version: "0.0.9", build: "9", languageCode: "ko-KR"),
-            "버전 0.0.9 (9)"
+            AppText.versionLabel(version: "0.0.10", build: "10", languageCode: "ko-KR"),
+            "버전 0.0.10 (10)"
         )
         XCTAssertEqual(
-            AppText.versionLabel(version: "0.0.9", build: "9", languageCode: "en-US"),
-            "Version 0.0.9 (9)"
+            AppText.versionLabel(version: "0.0.10", build: "10", languageCode: "en-US"),
+            "Version 0.0.10 (10)"
         )
     }
 }

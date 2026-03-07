@@ -33,6 +33,28 @@ struct MenuBarView: View {
                         .foregroundStyle(.secondary)
                 }
 
+                HStack(spacing: 12) {
+                    Text(AppText.pick(ko: "언어", en: "Language"))
+                        .font(.system(size: 11, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.secondary)
+
+                    Spacer()
+
+                    Picker(
+                        "",
+                        selection: Binding(
+                            get: { subscriber.selectedLanguage },
+                            set: { subscriber.setLanguage($0) }
+                        )
+                    ) {
+                        Text(AppLanguage.korean.displayName).tag(AppLanguage.korean)
+                        Text(AppLanguage.english.displayName).tag(AppLanguage.english)
+                    }
+                    .labelsHidden()
+                    .pickerStyle(.segmented)
+                    .frame(width: 150)
+                }
+
                 Divider()
 
                 statusRow

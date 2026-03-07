@@ -101,6 +101,11 @@ final class NotificationManager: NSObject, ObservableObject, UNUserNotificationC
         }
     }
 
+    func refreshLocalization() {
+        configureCategories()
+        refreshAuthorizationStatus()
+    }
+
     func requestNotificationAuthorization() {
         center.getNotificationSettings { [weak self] settings in
             guard let self else { return }

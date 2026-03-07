@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">우주사과</string>
     <string name="app_subtitle">Galaxy SMS를 여러 Mac 알림으로 이어주는 가장 작은 브리지</string>
+    <string name="section_language">언어</string>
+    <string name="language_korean">한국어</string>
+    <string name="language_english">English</string>
     <string name="action_scan_qr">Mac과 페어링하기 (QR 스캔)</string>
     <string name="action_open_notification_access">알림 접근 권한 열기</string>
     <string name="action_remove_mac">삭제</string>

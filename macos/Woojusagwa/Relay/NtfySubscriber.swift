@@ -36,12 +36,14 @@ final class NtfySubscriber: ObservableObject {
     @Published private(set) var lastMessage: String
     @Published private(set) var topicLabel: String
     @Published private(set) var notificationAuthorizationStatus: String
+    @Published private(set) var selectedLanguage: AppLanguage
     @Published private(set) var deviceNameLabel: String
     @Published private(set) var deviceIdLabel: String
     @Published private(set) var appVersionLabel: String
 
     private var urlSession: URLSession?
     private var dataTask: URLSessionDataTask?
+    private let appLanguageStore: AppLanguageStore
     private let pairingStore: PairingConfigurationStore
     private let notificationManager: NotificationManager
     private let deviceIdentityStore: DeviceIdentityStore
@@ -53,9 +55,12 @@ final class NtfySubscriber: ObservableObject {
         pairingStore: PairingConfigurationStore,
         notificationManager: NotificationManager,
         deviceIdentityStore: DeviceIdentityStore,
+        appLanguageStore: AppLanguageStore,
         appVersionProvider: @escaping () -> String = NtfySubscriber.defaultVersionLabel
     ) {
         let identity = deviceIdentityStore.currentIdentity()
+        let currentLanguage = appLanguageStore.currentLanguage()
+        self.appLanguageStore = appLanguageStore
         self.pairingStore = pairingStore
         self.notificationManager = notificationManager
         self.deviceIdentityStore = deviceIdentityStore
@@ -64,6 +69,7 @@ final class NtfySubscriber: ObservableObject {
         self.lastMessage = ""
         self.topicLabel = ""
         self.notificationAuthorizationStatus = notificationManager.authorizationStatusText
+        self.selectedLanguage = currentLanguage
         self.deviceNameLabel = identity.deviceName
         self.deviceIdLabel = identity.deviceId
         self.appVersionLabel = appVersionProvider()
@@ -76,6 +82,17 @@ final class NtfySubscriber: ObservableObject {
             .store(in: &cancellables)
 
         restorePairingIfAvailable()
+    }
+
+    func setLanguage(_ language: AppLanguage) {
+        guard language != selectedLanguage else {
+            return
+        }
+
+        appLanguageStore.setLanguage(language)
+        selectedLanguage = language
+        appVersionLabel = appVersionProvider()
+        notificationManager.refreshLocalization()
     }
     
     func prepareFreshPairingPayload() throws -> String {

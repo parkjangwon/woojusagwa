@@ -6,10 +6,15 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.os.LocaleListCompat
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
+import com.google.android.material.button.MaterialButtonToggleGroup
 import org.parkjw.woojusagwa.pairing.PairingPayloadParser
+import org.parkjw.woojusagwa.settings.AppLanguage
+import org.parkjw.woojusagwa.settings.AppLanguageStore
 import org.parkjw.woojusagwa.settings.NotificationAccessShortcut
 import org.parkjw.woojusagwa.settings.PairedMac
 import org.parkjw.woojusagwa.settings.SettingsRepository
@@ -17,10 +22,12 @@ import org.parkjw.woojusagwa.settings.SettingsRepository
 class MainActivity : AppCompatActivity() {
 
     private lateinit var settings: SettingsRepository
+    private lateinit var languageStore: AppLanguageStore
     private lateinit var statusText: TextView
     private lateinit var versionText: TextView
     private lateinit var pairedMacsContainer: LinearLayout
     private lateinit var pairedMacsEmptyText: TextView
+    private lateinit var languageToggleGroup: MaterialButtonToggleGroup
     private val pairingPayloadParser = PairingPayloadParser()
     private val stateFactory = MainActivityStateFactory()
 
@@ -35,13 +42,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         settings = SettingsRepository(this)
+        languageStore = AppLanguageStore(this)
         statusText = findViewById(R.id.status_text)
         versionText = findViewById(R.id.version_text)
         pairedMacsContainer = findViewById(R.id.paired_macs_container)
         pairedMacsEmptyText = findViewById(R.id.paired_macs_empty_text)
+        languageToggleGroup = findViewById(R.id.language_toggle_group)
         val scanButton: Button = findViewById(R.id.scan_button)
         val permissionButton: Button = findViewById(R.id.permission_button)
 
+        bindLanguageToggle()
         renderState()
 
         scanButton.setOnClickListener {
@@ -55,6 +65,34 @@ class MainActivity : AppCompatActivity() {
 
         permissionButton.setOnClickListener {
             startActivity(NotificationAccessShortcut.createIntent())
+        }
+    }
+
+    private fun bindLanguageToggle() {
+        val selectedButtonId = when (languageStore.currentLanguage()) {
+            AppLanguage.ENGLISH -> R.id.language_english_button
+            AppLanguage.KOREAN -> R.id.language_korean_button
+        }
+
+        languageToggleGroup.check(selectedButtonId)
+        languageToggleGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (!isChecked) {
+                return@addOnButtonCheckedListener
+            }
+
+            val selectedLanguage = when (checkedId) {
+                R.id.language_english_button -> AppLanguage.ENGLISH
+                else -> AppLanguage.KOREAN
+            }
+
+            if (selectedLanguage == languageStore.currentLanguage()) {
+                return@addOnButtonCheckedListener
+            }
+
+            languageStore.setLanguage(selectedLanguage)
+            AppCompatDelegate.setApplicationLocales(
+                LocaleListCompat.forLanguageTags(selectedLanguage.tag)
+            )
         }
     }
 
