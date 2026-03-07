@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "woojusagwa pairing payload",
+  "type": "object",
+  "required": [
+    "version",
+    "server",
+    "topic"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer"
+    },
+    "server": {
+      "type": "string"
+    },
+    "topic": {
+      "type": "string"
+    },
+    "deviceName": {
+      "type": "string"
+    }
+  }
+}
