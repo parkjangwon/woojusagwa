@@ -247,7 +247,7 @@ Android updateable releases require the same release keystore every time.
 
 GitHub Actions expects these repository secrets:
 
-- `ANDROID_SIGNING_KEYSTORE_BASE64`
+- `ANDROID_SIGNING_KEYSTORE_HEX`
 - `ANDROID_SIGNING_STORE_PASSWORD`
 - `ANDROID_SIGNING_KEY_ALIAS`
 - `ANDROID_SIGNING_KEY_PASSWORD`

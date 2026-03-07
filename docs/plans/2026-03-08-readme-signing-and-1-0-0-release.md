@@ -94,7 +94,7 @@ Behavior:
 **Step 2: Switch GitHub release builds from debug APK to release APK**
 
 Update the workflow to:
-- decode the base64 keystore from a GitHub secret
+- decode the keystore from a GitHub secret
 - export the signing env vars
 - run `./gradlew --no-daemon testDebugUnitTest assembleRelease`
 - upload `android/app/build/outputs/apk/release/app-release.apk`
@@ -129,7 +129,7 @@ Run `keytool -genkeypair` once and store it outside the repo with restricted per
 **Step 2: Register GitHub secrets**
 
 Create:
-- `ANDROID_SIGNING_KEYSTORE_BASE64`
+- `ANDROID_SIGNING_KEYSTORE_HEX`
 - `ANDROID_SIGNING_STORE_PASSWORD`
 - `ANDROID_SIGNING_KEY_ALIAS`
 - `ANDROID_SIGNING_KEY_PASSWORD`

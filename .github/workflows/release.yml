@@ -24,16 +24,22 @@ jobs:
 
       - name: Prepare Android signing
         env:
-          ANDROID_SIGNING_KEYSTORE_BASE64: ${{ secrets.ANDROID_SIGNING_KEYSTORE_BASE64 }}
+          ANDROID_SIGNING_KEYSTORE_HEX: ${{ secrets.ANDROID_SIGNING_KEYSTORE_HEX }}
           ANDROID_SIGNING_STORE_PASSWORD: ${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}
           ANDROID_SIGNING_KEY_ALIAS: ${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}
           ANDROID_SIGNING_KEY_PASSWORD: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
         run: |
-          test -n "$ANDROID_SIGNING_KEYSTORE_BASE64"
+          test -n "$ANDROID_SIGNING_KEYSTORE_HEX"
           test -n "$ANDROID_SIGNING_STORE_PASSWORD"
           test -n "$ANDROID_SIGNING_KEY_ALIAS"
           test -n "$ANDROID_SIGNING_KEY_PASSWORD"
-          printf '%s' "$ANDROID_SIGNING_KEYSTORE_BASE64" | base64 --decode --ignore-garbage > "$RUNNER_TEMP/woojusagwa-release.jks"
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+
+          output = Path(os.environ["RUNNER_TEMP"]) / "woojusagwa-release.jks"
+          output.write_bytes(bytes.fromhex(os.environ["ANDROID_SIGNING_KEYSTORE_HEX"]))
+          PY
 
       - name: Test and Build Android
         env:
