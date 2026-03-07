@@ -1,6 +1,5 @@
 import Foundation
 import Combine
-import AppKit
 
 enum SubscriberConnectionStatus {
     case readyToPair
@@ -33,7 +32,6 @@ enum SubscriberConnectionStatus {
 
 final class NtfySubscriber: ObservableObject {
     @Published private(set) var connectionStatus: SubscriberConnectionStatus
-    @Published private(set) var lastMessage: String
     @Published private(set) var topicLabel: String
     @Published private(set) var notificationAuthorizationStatus: String
     @Published private(set) var selectedLanguage: AppLanguage
@@ -66,7 +64,6 @@ final class NtfySubscriber: ObservableObject {
         self.deviceIdentityStore = deviceIdentityStore
         self.appVersionProvider = appVersionProvider
         self.connectionStatus = .readyToPair
-        self.lastMessage = ""
         self.topicLabel = ""
         self.notificationAuthorizationStatus = notificationManager.authorizationStatusText
         self.selectedLanguage = currentLanguage
@@ -104,16 +101,6 @@ final class NtfySubscriber: ObservableObject {
         )
         try connect(using: payload)
         return try payload.encodedJSONString()
-    }
-
-    func copyLastMessage() {
-        guard !lastMessage.isEmpty else {
-            return
-        }
-
-        let pasteboard = NSPasteboard.general
-        pasteboard.clearContents()
-        pasteboard.setString(lastMessage, forType: .string)
     }
 
     func disconnect() {
@@ -186,10 +173,8 @@ final class NtfySubscriber: ObservableObject {
     private func handleIncomingLine(_ line: String) {
         do {
             let payload = try relayDecoder.decode(line: line)
-            let summary = "\(payload.title): \(payload.body)"
 
             DispatchQueue.main.async {
-                self.lastMessage = summary
                 self.connectionStatus = .receiving
                 self.notificationManager.show(title: payload.title, body: payload.body)
             }
@@ -215,8 +200,8 @@ final class NtfySubscriber: ObservableObject {
 
     private static func defaultVersionLabel() -> String {
         let infoDictionary = Bundle.main.infoDictionary
-        let version = infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
-        let build = infoDictionary?["CFBundleVersion"] as? String ?? "100"
+        let version = infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.1"
+        let build = infoDictionary?["CFBundleVersion"] as? String ?? "101"
         return AppText.versionLabel(version: version, build: build)
     }
 }

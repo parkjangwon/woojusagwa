@@ -7,235 +7,316 @@ struct MenuBarView: View {
     @State private var showingQR = false
     @State private var pairingPayload = ""
     @State private var pairingError = ""
-    
+
+    private var summary: MenuBarSummary {
+        MenuBarSummary.make(
+            deviceName: subscriber.deviceNameLabel,
+            deviceId: subscriber.deviceIdLabel,
+            topic: subscriber.topicLabel,
+            notificationStatus: subscriber.notificationAuthorizationStatus,
+            languageCode: subscriber.selectedLanguage.tag
+        )
+    }
+
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 14) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(AppText.pick(ko: "우주사과", en: "Woojusagwa"))
-                        .font(.system(size: 18, weight: .bold, design: .rounded))
-                    Text(AppText.pick(
-                        ko: "Galaxy SMS를 여러 Mac 알림으로 이어주는 가장 작은 네이티브 브리지",
-                        en: "The smallest native bridge from Galaxy SMS to multiple Mac notifications"
-                    ))
-                    .font(.system(size: 12, weight: .medium, design: .rounded))
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-                    Text(AppText.pick(
-                        ko: "백엔드 없이, 계정 없이, 각 Mac의 고유 토픽으로 연결됩니다.",
-                        en: "No backend, no account, just one private topic per Mac."
-                    ))
-                    .font(.system(size: 11, weight: .regular, design: .rounded))
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-                    Text(subscriber.appVersionLabel)
-                        .font(.system(size: 11, weight: .medium, design: .rounded))
-                        .foregroundStyle(.secondary)
+            VStack(alignment: .leading, spacing: 12) {
+                headerPanel
+                connectionPanel
+
+                ForEach(summary.sections) { section in
+                    detailCard(section)
                 }
 
-                HStack(spacing: 12) {
-                    Text(AppText.pick(ko: "언어", en: "Language"))
-                        .font(.system(size: 11, weight: .semibold, design: .rounded))
-                        .foregroundStyle(.secondary)
-
-                    Spacer()
-
-                    Picker(
-                        "",
-                        selection: Binding(
-                            get: { subscriber.selectedLanguage },
-                            set: { subscriber.setLanguage($0) }
-                        )
-                    ) {
-                        Text(AppLanguage.korean.displayName).tag(AppLanguage.korean)
-                        Text(AppLanguage.english.displayName).tag(AppLanguage.english)
-                    }
-                    .labelsHidden()
-                    .pickerStyle(.segmented)
-                    .frame(width: 150)
-                }
-
-                Divider()
-
-                statusRow
-                deviceCard
-                notificationCard
-                topicCard
-                lastMessageCard
-
-                VStack(spacing: 10) {
-                    actionButton(
-                        AppText.pick(ko: "새 페어링 QR 만들기", en: "Create New Pairing QR"),
-                        style: .prominent
-                    ) {
-                        generatePairingPayload()
-                    }
-
-                    actionButton(
-                        AppText.pick(ko: "테스트 알림", en: "Send Test Notification"),
-                        style: .prominent
-                    ) {
-                        subscriber.sendTestNotification()
-                    }
-
-                    actionButton(
-                        AppText.pick(ko: "권한 다시 확인", en: "Check Permissions Again"),
-                        style: .bordered
-                    ) {
-                        subscriber.requestNotificationAuthorization()
-                    }
-
-                    actionButton(
-                        AppText.pick(ko: "알림 설정 열기", en: "Open Notification Settings"),
-                        style: .bordered
-                    ) {
-                        subscriber.openNotificationSettings()
-                    }
-
-                    actionButton(
-                        AppText.pick(ko: "마지막 메시지 복사", en: "Copy Last Message"),
-                        style: .bordered
-                    ) {
-                        subscriber.copyLastMessage()
-                    }
-
-                    Button(AppText.pick(ko: "종료", en: "Quit")) {
-                        NSApplication.shared.terminate(nil)
-                    }
-                    .buttonStyle(.plain)
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-                }
+                actionPanel
 
                 if showingQR {
-                    VStack(alignment: .center, spacing: 8) {
-                        Image(nsImage: generateQRCode(from: pairingPayload))
-                            .interpolation(.none)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 170, height: 170)
-
-                        Text(AppText.pick(
-                            ko: "이 QR은 이 Mac의 고유 토픽과 식별자를 담고 있습니다. 믿는 기기만 스캔하세요.",
-                            en: "This QR contains this Mac's private topic and identity. Scan it only on devices you trust."
-                        ))
-                        .font(.system(size: 11, weight: .regular, design: .rounded))
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
-                        .fixedSize(horizontal: false, vertical: true)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 4)
+                    qrPanel
                 }
 
                 if !pairingError.isEmpty {
-                    Text(pairingError)
-                        .font(.system(size: 11, weight: .medium, design: .rounded))
-                        .foregroundStyle(.red)
-                        .fixedSize(horizontal: false, vertical: true)
+                    errorPanel
                 }
             }
-            .padding(16)
+            .padding(14)
         }
-        .frame(width: 360)
-        .frame(maxHeight: 680)
+        .frame(width: 372)
+        .frame(maxHeight: 660)
         .onAppear {
             subscriber.refreshNotificationAuthorizationStatus()
         }
     }
 
-    private var statusRow: some View {
-        HStack(spacing: 8) {
-            Circle()
-                .fill(statusColor)
-                .frame(width: 10, height: 10)
-            Text(subscriber.connectionStatus.localizedLabel)
-                .font(.system(size: 12, weight: .semibold, design: .rounded))
+    private var headerPanel: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .top, spacing: 12) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(summary.title)
+                        .font(.system(size: 20, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color(nsColor: .labelColor))
+
+                    Text(summary.subtitle)
+                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .foregroundStyle(Color(nsColor: .labelColor))
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    Text(summary.footnote)
+                        .font(.system(size: 11, weight: .regular, design: .rounded))
+                        .foregroundStyle(Color(nsColor: .secondaryLabelColor))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                Spacer(minLength: 8)
+
+                Text(subscriber.appVersionLabel)
+                    .font(.system(size: 11, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color(nsColor: .secondaryLabelColor))
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(
+                        Capsule(style: .continuous)
+                            .fill(Color(nsColor: .controlBackgroundColor))
+                    )
+                    .overlay(
+                        Capsule(style: .continuous)
+                            .stroke(Color(nsColor: .separatorColor).opacity(0.24), lineWidth: 1)
+                    )
+            }
+
+            Divider()
+
+            HStack(spacing: 12) {
+                Text(AppText.pick(ko: "언어", en: "Language"))
+                    .font(.system(size: 11, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color(nsColor: .secondaryLabelColor))
+
+                Spacer()
+
+                Picker(
+                    "",
+                    selection: Binding(
+                        get: { subscriber.selectedLanguage },
+                        set: { subscriber.setLanguage($0) }
+                    )
+                ) {
+                    Text(AppLanguage.korean.displayName).tag(AppLanguage.korean)
+                    Text(AppLanguage.english.displayName).tag(AppLanguage.english)
+                }
+                .labelsHidden()
+                .pickerStyle(.segmented)
+                .frame(width: 152)
+            }
         }
+        .padding(14)
+        .menuPanel(fill: Color(nsColor: .windowBackgroundColor))
     }
 
-    private var topicCard: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(AppText.pick(ko: "현재 토픽", en: "Current Topic"))
-                .font(.system(size: 11, weight: .semibold, design: .rounded))
-                .foregroundStyle(.secondary)
-            Text(subscriber.topicLabel.isEmpty ? AppText.pick(ko: "아직 페어링되지 않음", en: "Not paired yet") : subscriber.topicLabel)
-                .font(.system(size: 12, weight: .medium, design: .monospaced))
-                .lineLimit(2)
-                .truncationMode(.middle)
-                .textSelection(.enabled)
+    private var connectionPanel: some View {
+        HStack(alignment: .top, spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(statusColor.opacity(0.14))
+                    .frame(width: 28, height: 28)
+
+                Circle()
+                    .fill(statusColor)
+                    .frame(width: 8, height: 8)
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(subscriber.connectionStatus.localizedLabel)
+                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color(nsColor: .labelColor))
+
+                Text(connectionDescription)
+                    .font(.system(size: 11, weight: .regular, design: .rounded))
+                    .foregroundStyle(Color(nsColor: .secondaryLabelColor))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Spacer(minLength: 0)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(10)
-        .background(Color(NSColor.controlBackgroundColor))
-        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .padding(12)
+        .menuPanel(
+            fill: statusColor.opacity(0.08),
+            stroke: statusColor.opacity(0.24)
+        )
     }
 
-    private var deviceCard: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(AppText.pick(ko: "이 Mac", en: "This Mac"))
+    private func detailCard(_ section: MenuBarSummary.Section) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(section.title)
                 .font(.system(size: 11, weight: .semibold, design: .rounded))
-                .foregroundStyle(.secondary)
-            Text(subscriber.deviceNameLabel)
-                .font(.system(size: 12, weight: .medium, design: .rounded))
-                .lineLimit(2)
-                .fixedSize(horizontal: false, vertical: true)
-            Text(AppText.pick(ko: "ID", en: "ID") + ": \(subscriber.deviceIdLabel)")
-                .font(.system(size: 11, weight: .medium, design: .monospaced))
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
-                .truncationMode(.middle)
-                .textSelection(.enabled)
+                .foregroundStyle(Color(nsColor: .secondaryLabelColor))
+
+            detailText(
+                section.primaryText,
+                style: section.primaryStyle,
+                truncatesInMiddle: section.usesMiddleTruncation
+            )
+
+            if let secondaryText = section.secondaryText {
+                detailText(
+                    secondaryText,
+                    style: section.secondaryStyle ?? .body,
+                    truncatesInMiddle: section.usesMiddleTruncation,
+                    secondary: true
+                )
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(10)
-        .background(Color(NSColor.controlBackgroundColor))
-        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .padding(12)
+        .menuPanel(fill: Color(nsColor: .controlBackgroundColor))
     }
 
-    private var notificationCard: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(AppText.pick(ko: "알림 상태", en: "Notification Status"))
-                .font(.system(size: 11, weight: .semibold, design: .rounded))
-                .foregroundStyle(.secondary)
-            Text(subscriber.notificationAuthorizationStatus)
-                .font(.system(size: 12, weight: .medium, design: .rounded))
-                .fixedSize(horizontal: false, vertical: true)
+    private var actionPanel: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            actionButton(
+                AppText.pick(ko: "새 페어링 QR 만들기", en: "Create New Pairing QR"),
+                style: .prominent,
+                action: generatePairingPayload
+            )
+
+            HStack(spacing: 10) {
+                actionButton(
+                    AppText.pick(ko: "테스트 알림", en: "Send Test Notification"),
+                    style: .bordered
+                ) {
+                    subscriber.sendTestNotification()
+                }
+
+                actionButton(
+                    AppText.pick(ko: "권한 다시 확인", en: "Check Permissions Again"),
+                    style: .bordered
+                ) {
+                    subscriber.requestNotificationAuthorization()
+                }
+            }
+
+            HStack(spacing: 10) {
+                actionButton(
+                    AppText.pick(ko: "알림 설정 열기", en: "Open Notification Settings"),
+                    style: .bordered
+                ) {
+                    subscriber.openNotificationSettings()
+                }
+
+                Button(AppText.pick(ko: "종료", en: "Quit")) {
+                    NSApplication.shared.terminate(nil)
+                }
+                .buttonStyle(.borderless)
+                .foregroundStyle(Color(nsColor: .secondaryLabelColor))
+                .frame(maxWidth: .infinity, alignment: .trailing)
+            }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(10)
-        .background(Color(NSColor.controlBackgroundColor))
-        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .padding(.top, 2)
     }
 
-    private var lastMessageCard: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(AppText.pick(ko: "마지막 수신", en: "Last Message"))
-                .font(.system(size: 11, weight: .semibold, design: .rounded))
-                .foregroundStyle(.secondary)
-            Text(subscriber.lastMessage.isEmpty ? AppText.pick(ko: "아직 수신된 메시지가 없습니다", en: "No messages received yet") : subscriber.lastMessage)
-                .font(.system(size: 12, weight: .medium, design: .rounded))
-                .lineLimit(4)
-                .fixedSize(horizontal: false, vertical: true)
-                .textSelection(.enabled)
+    private var qrPanel: some View {
+        VStack(alignment: .center, spacing: 10) {
+            Image(nsImage: generateQRCode(from: pairingPayload))
+                .interpolation(.none)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 176, height: 176)
+
+            Text(AppText.pick(
+                ko: "이 QR은 이 Mac의 고유 토픽과 식별자를 담고 있습니다. 믿는 기기만 스캔하세요.",
+                en: "This QR contains this Mac's private topic and identity. Scan it only on devices you trust."
+            ))
+            .font(.system(size: 11, weight: .regular, design: .rounded))
+            .foregroundStyle(Color(nsColor: .secondaryLabelColor))
+            .multilineTextAlignment(.center)
+            .fixedSize(horizontal: false, vertical: true)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(10)
-        .background(Color(NSColor.controlBackgroundColor))
-        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .frame(maxWidth: .infinity)
+        .padding(14)
+        .menuPanel(fill: Color(nsColor: .controlBackgroundColor))
+    }
+
+    private var errorPanel: some View {
+        Text(pairingError)
+            .font(.system(size: 11, weight: .medium, design: .rounded))
+            .foregroundStyle(Color(nsColor: .systemRed))
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(12)
+            .menuPanel(
+                fill: Color(nsColor: .systemRed).opacity(0.08),
+                stroke: Color(nsColor: .systemRed).opacity(0.22)
+            )
+    }
+
+    private func detailText(
+        _ text: String,
+        style: MenuBarSummary.Section.TextStyle,
+        truncatesInMiddle: Bool,
+        secondary: Bool = false
+    ) -> some View {
+        Text(text)
+            .font(
+                style == .monospaced
+                ? .system(size: secondary ? 11 : 12, weight: .medium, design: .monospaced)
+                : .system(size: secondary ? 11 : 12, weight: .medium, design: .rounded)
+            )
+            .foregroundStyle(
+                secondary
+                ? Color(nsColor: .secondaryLabelColor)
+                : Color(nsColor: .labelColor)
+            )
+            .lineLimit(style == .monospaced ? 2 : 3)
+            .truncationMode(truncatesInMiddle ? .middle : .tail)
+            .fixedSize(horizontal: false, vertical: true)
+            .textSelection(.enabled)
+    }
+
+    private var connectionDescription: String {
+        switch subscriber.connectionStatus {
+        case .readyToPair:
+            return AppText.pick(
+                ko: "새 페어링 QR을 만든 뒤 Android 앱에서 스캔하면 연결됩니다.",
+                en: "Create a pairing QR, then scan it from the Android app."
+            )
+        case .disconnected:
+            return AppText.pick(
+                ko: "연결이 끊어졌습니다. 토픽과 네트워크 상태를 다시 확인하세요.",
+                en: "The relay connection is down. Check the topic and network state."
+            )
+        case .connecting, .listening:
+            return AppText.pick(
+                ko: "문자 알림을 기다리는 중입니다. 수신되면 macOS 알림센터에 바로 표시됩니다.",
+                en: "Waiting for SMS notifications. Incoming messages appear in macOS Notification Center."
+            )
+        case .receiving:
+            return AppText.pick(
+                ko: "최근 수신이 있었고, 계속 같은 토픽에서 알림을 대기 중입니다.",
+                en: "Messages were received recently and the app is still listening on this topic."
+            )
+        case .relayError:
+            return AppText.pick(
+                ko: "릴레이 연결에 문제가 있습니다. 네트워크와 ntfy 서버 주소를 확인하세요.",
+                en: "There is a relay connection problem. Check the network and ntfy server address."
+            )
+        case .relayPayloadError:
+            return AppText.pick(
+                ko: "수신한 데이터 형식이 맞지 않습니다. 페어링을 다시 만들면 해결될 수 있습니다.",
+                en: "The incoming relay payload is invalid. Recreating the pairing can help."
+            )
+        }
     }
 
     private var statusColor: Color {
         switch subscriber.connectionStatus {
         case .receiving:
-            return .green
+            return Color(nsColor: .systemGreen)
         case .listening, .connecting:
-            return .orange
+            return Color(nsColor: .systemOrange)
         default:
-            return .red
+            return Color(nsColor: .systemRed)
         }
     }
 
-    func generatePairingPayload() {
+    private func generatePairingPayload() {
         do {
             pairingPayload = try subscriber.prepareFreshPairingPayload()
             pairingError = ""
@@ -258,24 +339,26 @@ struct MenuBarView: View {
         if style == .prominent {
             Button(title, action: action)
                 .buttonStyle(.borderedProminent)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .controlSize(.large)
+                .frame(maxWidth: .infinity)
         } else {
             Button(title, action: action)
                 .buttonStyle(.bordered)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .controlSize(.large)
+                .frame(maxWidth: .infinity)
         }
     }
-    
-    func generateQRCode(from string: String) -> NSImage {
+
+    private func generateQRCode(from string: String) -> NSImage {
         let context = CIContext()
         let filter = CIFilter.qrCodeGenerator()
         filter.message = Data(string.utf8)
 
-        if let outputImage = filter.outputImage {
-            if let cgimg = context.createCGImage(outputImage, from: outputImage.extent) {
-                return NSImage(cgImage: cgimg, size: NSSize(width: 150, height: 150))
-            }
+        if let outputImage = filter.outputImage,
+           let cgimg = context.createCGImage(outputImage, from: outputImage.extent) {
+            return NSImage(cgImage: cgimg, size: NSSize(width: 150, height: 150))
         }
+
         return NSImage()
     }
 }
@@ -283,4 +366,19 @@ struct MenuBarView: View {
 private enum ActionButtonStyle {
     case prominent
     case bordered
+}
+
+private extension View {
+    func menuPanel(fill: Color, stroke: Color? = nil) -> some View {
+        let border = stroke ?? Color(nsColor: .separatorColor).opacity(0.20)
+
+        return background(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(fill)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(border, lineWidth: 1)
+        )
+    }
 }

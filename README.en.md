@@ -13,7 +13,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Platform-Android%20%7C%20macOS-5b8cff" alt="Platform">
-  <img src="https://img.shields.io/badge/Release-1.0.0-1f7a3f" alt="Release">
+  <img src="https://img.shields.io/badge/Release-1.0.1-1f7a3f" alt="Release">
   <img src="https://img.shields.io/badge/License-MIT-4c566a" alt="License">
 </p>
 
