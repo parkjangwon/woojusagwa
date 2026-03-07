@@ -6,12 +6,14 @@ final class NtfySubscriber: ObservableObject {
     @Published private(set) var connectionStatus: String
     @Published private(set) var lastMessage: String
     @Published private(set) var topicLabel: String
+    @Published private(set) var notificationAuthorizationStatus: String
 
     private var urlSession: URLSession?
     private var dataTask: URLSessionDataTask?
     private let pairingStore: PairingConfigurationStore
     private let notificationManager: NotificationManager
     private let relayDecoder = RelayEnvelopeDecoder()
+    private var cancellables = Set<AnyCancellable>()
 
     init(
         pairingStore: PairingConfigurationStore,
@@ -22,6 +24,14 @@ final class NtfySubscriber: ObservableObject {
         self.connectionStatus = "Ready to pair"
         self.lastMessage = "No messages yet"
         self.topicLabel = "Not paired"
+        self.notificationAuthorizationStatus = notificationManager.authorizationStatusText
+
+        notificationManager.$authorizationStatusText
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] statusText in
+                self?.notificationAuthorizationStatus = statusText
+            }
+            .store(in: &cancellables)
 
         restorePairingIfAvailable()
     }
@@ -48,6 +58,18 @@ final class NtfySubscriber: ObservableObject {
         urlSession?.invalidateAndCancel()
         urlSession = nil
         connectionStatus = "Disconnected"
+    }
+
+    func sendTestNotification() {
+        notificationManager.sendTestNotification()
+    }
+
+    func requestNotificationAuthorization() {
+        notificationManager.requestNotificationAuthorization()
+    }
+
+    func refreshNotificationAuthorizationStatus() {
+        notificationManager.refreshAuthorizationStatus()
     }
 
     private func connect(using payload: PairingPayload) throws {

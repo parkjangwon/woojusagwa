@@ -24,6 +24,7 @@ struct MenuBarView: View {
             Divider()
 
             statusRow
+            notificationCard
             topicCard
             lastMessageCard
 
@@ -56,6 +57,18 @@ struct MenuBarView: View {
             }
 
             HStack(spacing: 10) {
+                Button("테스트 알림") {
+                    subscriber.sendTestNotification()
+                }
+                .buttonStyle(.borderedProminent)
+
+                Button("권한 다시 확인") {
+                    subscriber.requestNotificationAuthorization()
+                }
+                .buttonStyle(.bordered)
+            }
+
+            HStack(spacing: 10) {
                 Button("마지막 메시지 복사") {
                     subscriber.copyLastMessage()
                 }
@@ -69,6 +82,9 @@ struct MenuBarView: View {
         }
         .padding()
         .frame(width: 320)
+        .onAppear {
+            subscriber.refreshNotificationAuthorizationStatus()
+        }
     }
 
     private var statusRow: some View {
@@ -88,6 +104,20 @@ struct MenuBarView: View {
                 .foregroundStyle(.secondary)
             Text(subscriber.topicLabel)
                 .font(.system(size: 12, weight: .medium, design: .monospaced))
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(10)
+        .background(Color(NSColor.controlBackgroundColor))
+        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+    }
+
+    private var notificationCard: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("알림 상태")
+                .font(.system(size: 11, weight: .semibold, design: .rounded))
+                .foregroundStyle(.secondary)
+            Text(subscriber.notificationAuthorizationStatus)
+                .font(.system(size: 12, weight: .medium, design: .rounded))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(10)

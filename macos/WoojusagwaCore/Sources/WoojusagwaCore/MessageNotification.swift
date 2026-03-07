@@ -30,9 +30,14 @@ public struct OneTimeCodeDetector {
 
 public struct MessageNotificationRequestFactory {
     private let codeDetector: OneTimeCodeDetector
+    private let deliveryDelay: TimeInterval
 
-    public init(codeDetector: OneTimeCodeDetector = OneTimeCodeDetector()) {
+    public init(
+        codeDetector: OneTimeCodeDetector = OneTimeCodeDetector(),
+        deliveryDelay: TimeInterval = 1
+    ) {
         self.codeDetector = codeDetector
+        self.deliveryDelay = deliveryDelay
     }
 
     public var foregroundPresentationOptions: UNNotificationPresentationOptions {
@@ -57,7 +62,7 @@ public struct MessageNotificationRequestFactory {
         return UNNotificationRequest(
             identifier: identifier,
             content: content,
-            trigger: nil
+            trigger: UNTimeIntervalNotificationTrigger(timeInterval: deliveryDelay, repeats: false)
         )
     }
 }

@@ -3,12 +3,14 @@ import UserNotifications
 @testable import WoojusagwaCore
 
 final class MessageNotificationTests: XCTestCase {
-    func testBuildsImmediateRequestWithIncomingMessageContent() {
+    func testBuildsScheduledRequestWithIncomingMessageContent() throws {
         let request = MessageNotificationRequestFactory().makeRequest(title: "Alice", body: "Landing in 10")
 
         XCTAssertEqual(request.content.title, "Alice")
         XCTAssertEqual(request.content.body, "Landing in 10")
-        XCTAssertNil(request.trigger)
+        let trigger = try XCTUnwrap(request.trigger as? UNTimeIntervalNotificationTrigger)
+        XCTAssertEqual(trigger.timeInterval, 1, accuracy: 0.01)
+        XCTAssertFalse(trigger.repeats)
     }
 
     func testForegroundPresentationUsesBannerListAndSound() {
