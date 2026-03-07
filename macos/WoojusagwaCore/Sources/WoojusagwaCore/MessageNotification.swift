@@ -77,23 +77,27 @@ public struct MessageNotificationAuthorizationPlan {
     public func statusText(
         authorizationStatus: UNAuthorizationStatus,
         alertSetting: UNNotificationSetting,
-        notificationCenterSetting: UNNotificationSetting
+        notificationCenterSetting: UNNotificationSetting,
+        languageCode: String? = nil
     ) -> String {
         switch authorizationStatus {
         case .notDetermined:
             return AppText.pick(
                 ko: "알림 권한 필요",
-                en: "Notification permission required"
+                en: "Notification permission required",
+                languageCode: languageCode
             )
         case .denied:
             return AppText.pick(
                 ko: "알림 꺼짐: macOS 설정에서 우주사과 알림을 허용해 주세요.",
-                en: "Notifications are off. Allow Woojusagwa in macOS settings."
+                en: "Notifications are off. Allow Woojusagwa in macOS settings.",
+                languageCode: languageCode
             )
         case .provisional:
             return AppText.pick(
                 ko: "임시 허용 상태입니다. 알림 설정에서 배너 또는 알림으로 바꿔 주세요.",
-                en: "Notifications are provisionally allowed. Switch to banners or alerts in settings."
+                en: "Notifications are provisionally allowed. Switch to banners or alerts in settings.",
+                languageCode: languageCode
             )
         case .authorized, .ephemeral:
             let alertEnabled = alertSetting == .enabled
@@ -102,32 +106,37 @@ public struct MessageNotificationAuthorizationPlan {
             if alertEnabled && centerEnabled {
                 return AppText.pick(
                     ko: "배너와 알림센터 사용 가능",
-                    en: "Banners and Notification Center enabled"
+                    en: "Banners and Notification Center enabled",
+                    languageCode: languageCode
                 )
             }
 
             if alertEnabled {
                 return AppText.pick(
                     ko: "배너만 켜짐: 알림센터 저장은 꺼져 있을 수 있습니다.",
-                    en: "Banners enabled. Notification Center may still be off."
+                    en: "Banners enabled. Notification Center may still be off.",
+                    languageCode: languageCode
                 )
             }
 
             if centerEnabled {
                 return AppText.pick(
                     ko: "알림센터만 켜짐: 배너는 꺼져 있습니다.",
-                    en: "Notification Center enabled. Banners are off."
+                    en: "Notification Center enabled. Banners are off.",
+                    languageCode: languageCode
                 )
             }
 
             return AppText.pick(
                 ko: "권한 있음, 하지만 배너/알림센터 표시가 꺼져 있습니다.",
-                en: "Permission granted, but banners and Notification Center are off."
+                en: "Permission granted, but banners and Notification Center are off.",
+                languageCode: languageCode
             )
         @unknown default:
             return AppText.pick(
                 ko: "알림 상태를 확인할 수 없습니다.",
-                en: "Unable to determine notification status."
+                en: "Unable to determine notification status.",
+                languageCode: languageCode
             )
         }
     }

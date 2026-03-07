@@ -35,7 +35,8 @@ final class MessageNotificationTests: XCTestCase {
         let statusText = MessageNotificationAuthorizationPlan().statusText(
             authorizationStatus: .provisional,
             alertSetting: .disabled,
-            notificationCenterSetting: .enabled
+            notificationCenterSetting: .enabled,
+            languageCode: "ko-KR"
         )
 
         XCTAssertEqual(statusText, "임시 허용 상태입니다. 알림 설정에서 배너 또는 알림으로 바꿔 주세요.")
