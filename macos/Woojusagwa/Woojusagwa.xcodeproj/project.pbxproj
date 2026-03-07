@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2CAA6B35803E4FE59516B7EB /* NtfySubscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3739875A6C7D64DEC11CA0 /* NtfySubscriber.swift */; };
 		300C85EE4E96F76590BB3DCC /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96A1210C10FB76FFB3706D1 /* MenuBarView.swift */; };
+		33D8805F83A6453AA3C7E13B /* MessageNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648A27C93A474C4DA22A5C2C /* MessageNotification.swift */; };
 		355D01E90C806E866C6106E5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 219808AD046235BC916429B5 /* Cocoa.framework */; };
 		460413F6706635F1E6267FD0 /* PairingPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3AE85470CDA16E4EACDB62 /* PairingPayload.swift */; };
 		71D965FE3C64DD05EA968E8B /* WoojusagwaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EECED1262731DB8CB5D5C257 /* WoojusagwaApp.swift */; };
@@ -21,6 +22,7 @@
 		219808AD046235BC916429B5 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		2970C8D59BA6A767F0E4AAD0 /* NotificationManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotificationManager.swift; path = Notifications/NotificationManager.swift; sourceTree = "<group>"; };
 		2A3739875A6C7D64DEC11CA0 /* NtfySubscriber.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NtfySubscriber.swift; path = Relay/NtfySubscriber.swift; sourceTree = "<group>"; };
+		648A27C93A474C4DA22A5C2C /* MessageNotification.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MessageNotification.swift; path = ../WoojusagwaCore/Sources/WoojusagwaCore/MessageNotification.swift; sourceTree = "<group>"; };
 		7E0655963985EAAB3F88228D /* RelayEnvelope.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RelayEnvelope.swift; path = ../WoojusagwaCore/Sources/WoojusagwaCore/RelayEnvelope.swift; sourceTree = "<group>"; };
 		C96A1210C10FB76FFB3706D1 /* MenuBarView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MenuBarView.swift; path = UI/MenuBarView.swift; sourceTree = "<group>"; };
 		CB1DFBEC0E54A8C29139234C /* PairingConfigurationStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PairingConfigurationStore.swift; path = ../WoojusagwaCore/Sources/WoojusagwaCore/PairingConfigurationStore.swift; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 				1405155D214F37516FBBC281 /* Frameworks */,
 				C61A5BBA0909158912AD886F /* Woojusagwa */,
 				32D44620CF3D24E36509568B /* WoojusagwaCore */,
+				648A27C93A474C4DA22A5C2C /* MessageNotification.swift */,
 				DD3AE85470CDA16E4EACDB62 /* PairingPayload.swift */,
 				7E0655963985EAAB3F88228D /* RelayEnvelope.swift */,
 				CB1DFBEC0E54A8C29139234C /* PairingConfigurationStore.swift */,
@@ -206,6 +209,7 @@
 				AFDC313F4DE02F40813482F5 /* NotificationManager.swift in Sources */,
 				2CAA6B35803E4FE59516B7EB /* NtfySubscriber.swift in Sources */,
 				300C85EE4E96F76590BB3DCC /* MenuBarView.swift in Sources */,
+				33D8805F83A6453AA3C7E13B /* MessageNotification.swift in Sources */,
 				460413F6706635F1E6267FD0 /* PairingPayload.swift in Sources */,
 				D675843F39B3D8403D44D583 /* RelayEnvelope.swift in Sources */,
 				C6AE41BF1DA24CDFE4BA8CB3 /* PairingConfigurationStore.swift in Sources */,
