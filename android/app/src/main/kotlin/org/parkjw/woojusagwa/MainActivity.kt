@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
 import org.parkjw.woojusagwa.pairing.PairingPayloadParser
+import org.parkjw.woojusagwa.settings.NotificationAccessShortcut
 import org.parkjw.woojusagwa.settings.SettingsRepository
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         settings = SettingsRepository(this)
         statusText = findViewById(R.id.status_text)
         val scanButton: Button = findViewById(R.id.scan_button)
+        val permissionButton: Button = findViewById(R.id.permission_button)
 
         updateStatus()
 
@@ -37,6 +39,10 @@ class MainActivity : AppCompatActivity() {
             options.setPrompt("Scan Mac QR Code")
             options.setBeepEnabled(false)
             barcodeLauncher.launch(options)
+        }
+
+        permissionButton.setOnClickListener {
+            startActivity(NotificationAccessShortcut.createIntent())
         }
     }
 

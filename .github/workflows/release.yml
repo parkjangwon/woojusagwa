@@ -50,6 +50,7 @@ jobs:
           cd macos
           # Create build directory
           mkdir -p build
+          rm -rf build/dmg
           
           # Build the app using xcodebuild (Apple Silicon target)
           # Note: Adjust scheme name if necessary (default is project folder name)
@@ -60,8 +61,12 @@ jobs:
                      -destination 'platform=macOS,arch=arm64' \
                      CODE_SIGNING_ALLOWED=NO
 
+          mkdir -p build/dmg
+          cp -R build/Build/Products/Release/우주사과.app build/dmg/
+          ln -s /Applications build/dmg/Applications
+
           # Package into DMG
-          hdiutil create -volname "woojusagwa" -srcfolder build/Build/Products/Release/Woojusagwa.app -ov -format UDZO woojusagwa-macos-arm64.dmg
+          hdiutil create -volname "woojusagwa" -srcfolder build/dmg -ov -format UDZO woojusagwa-macos-arm64.dmg
 
       - name: Upload macOS Artifact
         uses: actions/upload-artifact@v4

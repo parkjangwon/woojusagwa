@@ -2,6 +2,7 @@
     <string name="app_name">우주사과</string>
     <string name="app_subtitle">Galaxy SMS를 Mac 알림으로 이어주는 가장 작은 브리지</string>
     <string name="action_scan_qr">Mac과 페어링하기 (QR 스캔)</string>
+    <string name="action_open_notification_access">알림 접근 권한 열기</string>
     <string name="status_not_paired">아직 Mac과 연결되지 않았습니다. 메뉴바 앱에서 QR을 띄운 뒤 스캔하세요.</string>
     <string name="status_connected">연결됨\n서버: %1$s\n토픽: %2$s</string>
     <string name="status_invalid_qr">유효한 우주사과 QR이 아닙니다. Mac 앱에서 새 QR을 다시 생성하세요.</string>
