@@ -24,7 +24,7 @@ final class NotificationManager: NSObject, ObservableObject, UNUserNotificationC
         configureCategories()
         refreshAuthorizationStatus()
         DispatchQueue.main.async { [weak self] in
-            self?.bootstrapNotificationAuthorizationIfNeeded()
+            self?.requestAuthorizationIfNeeded()
         }
     }
 
@@ -34,7 +34,7 @@ final class NotificationManager: NSObject, ObservableObject, UNUserNotificationC
 
             switch settings.authorizationStatus {
             case .notDetermined:
-                self.bootstrapNotificationAuthorization { granted in
+                self.requestAuthorizationInteractively { granted in
                     if granted {
                         self.enqueueNotification(title: title, body: body)
                     }
@@ -98,7 +98,7 @@ final class NotificationManager: NSObject, ObservableObject, UNUserNotificationC
 
             switch settings.authorizationStatus {
             case .notDetermined:
-                self.bootstrapNotificationAuthorization(openSettingsAfterBootstrap: true)
+                self.requestAuthorizationInteractively()
             case .authorized, .provisional, .ephemeral, .denied:
                 self.openNotificationSettings()
                 self.refreshAuthorizationStatus()
@@ -169,60 +169,31 @@ final class NotificationManager: NSObject, ObservableObject, UNUserNotificationC
         center.setNotificationCategories([category])
     }
 
-    private func bootstrapNotificationAuthorization(
-        openSettingsAfterBootstrap: Bool = false,
-        completion: ((Bool) -> Void)? = nil
-    ) {
-        center.requestAuthorization(options: authorizationPlan.bootstrapRequestOptions) { [weak self] granted, error in
-            guard let self else {
-                completion?(granted)
-                return
-            }
+    private func requestAuthorizationInteractively(completion: ((Bool) -> Void)? = nil) {
+        DispatchQueue.main.async {
+            NSApplication.shared.activate(ignoringOtherApps: true)
+        }
 
+        center.requestAuthorization(options: authorizationPlan.defaultRequestOptions) { [weak self] granted, error in
             if let error {
-                print("Notification bootstrap error: \(error.localizedDescription)")
+                print("Notification authorization error: \(error.localizedDescription)")
             }
 
-            if granted {
-                self.enqueueBootstrapNotification()
-            }
-
-            self.refreshAuthorizationStatus()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+            self?.refreshAuthorizationStatus()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
                 self?.refreshAuthorizationStatus()
             }
-
-            if openSettingsAfterBootstrap {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
-                    self?.openNotificationSettings()
-                }
-            }
-
             completion?(granted)
         }
     }
 
-    private func enqueueBootstrapNotification() {
-        let identifier = MessageNotificationAuthorizationPlan.bootstrapNotificationIdentifier
-        center.removePendingNotificationRequests(withIdentifiers: [identifier])
-        center.removeDeliveredNotifications(withIdentifiers: [identifier])
-
-        let request = authorizationPlan.makeBootstrapNotificationRequest(identifier: identifier)
-
-        center.add(request) { error in
-            if let error {
-                print("Error adding bootstrap notification: \(error.localizedDescription)")
-            }
-        }
-    }
-
-    private func bootstrapNotificationAuthorizationIfNeeded() {
+    private func requestAuthorizationIfNeeded() {
         center.getNotificationSettings { [weak self] settings in
             guard let self else { return }
 
             switch settings.authorizationStatus {
             case .notDetermined:
-                self.bootstrapNotificationAuthorization()
+                self.requestAuthorizationInteractively()
             case .denied:
                 print("Notification Permission Denied")
             case .authorized, .provisional, .ephemeral:

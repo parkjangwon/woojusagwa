@@ -68,16 +68,10 @@ public struct MessageNotificationRequestFactory {
 }
 
 public struct MessageNotificationAuthorizationPlan {
-    public static let bootstrapNotificationIdentifier = "org.parkjw.woojusagwa.notification.bootstrap"
-
     public init() {}
 
-    public var bootstrapRequestOptions: UNAuthorizationOptions {
-        [.alert, .badge, .sound, .provisional, .providesAppNotificationSettings]
-    }
-
-    public var interactiveRequestOptions: UNAuthorizationOptions {
-        [.alert, .badge, .sound]
+    public var defaultRequestOptions: UNAuthorizationOptions {
+        [.alert, .badge, .sound, .providesAppNotificationSettings]
     }
 
     public func statusText(
@@ -91,7 +85,7 @@ public struct MessageNotificationAuthorizationPlan {
         case .denied:
             return "알림 꺼짐: macOS 설정에서 우주사과 알림을 허용해 주세요."
         case .provisional:
-            return "임시 허용됨: 알림센터에 조용히 전달됩니다. 테스트 알림 후 유지 또는 즉시 전달로 바꿔 주세요."
+            return "임시 허용 상태입니다. 알림 설정에서 배너 또는 알림으로 바꿔 주세요."
         case .authorized, .ephemeral:
             let alertEnabled = alertSetting == .enabled
             let centerEnabled = notificationCenterSetting == .enabled
@@ -112,20 +106,5 @@ public struct MessageNotificationAuthorizationPlan {
         @unknown default:
             return "알림 상태를 확인할 수 없습니다."
         }
-    }
-
-    public func makeBootstrapNotificationRequest(
-        identifier: String = MessageNotificationAuthorizationPlan.bootstrapNotificationIdentifier,
-        deliveryDelay: TimeInterval = 1
-    ) -> UNNotificationRequest {
-        let content = UNMutableNotificationContent()
-        content.title = "우주사과 알림 준비"
-        content.body = "이 알림이 알림센터에 보이면 시스템 설정에서 배너를 켤 수 있습니다."
-
-        return UNNotificationRequest(
-            identifier: identifier,
-            content: content,
-            trigger: UNTimeIntervalNotificationTrigger(timeInterval: deliveryDelay, repeats: false)
-        )
     }
 }

@@ -21,36 +21,24 @@ final class MessageNotificationTests: XCTestCase {
         XCTAssertTrue(options.contains(.sound))
     }
 
-    func testBootstrapAuthorizationRequestIncludesProvisionalRegistration() {
-        let options = MessageNotificationAuthorizationPlan().bootstrapRequestOptions
+    func testDefaultAuthorizationRequestUsesImmediateAlertsInsteadOfQuietDelivery() {
+        let options = MessageNotificationAuthorizationPlan().defaultRequestOptions
 
         XCTAssertTrue(options.contains(.alert))
         XCTAssertTrue(options.contains(.sound))
         XCTAssertTrue(options.contains(.badge))
-        XCTAssertTrue(options.contains(.provisional))
         XCTAssertTrue(options.contains(.providesAppNotificationSettings))
+        XCTAssertFalse(options.contains(.provisional))
     }
 
-    func testStatusTextForProvisionalAuthorizationExplainsQuietDelivery() {
+    func testStatusTextForProvisionalAuthorizationExplainsOldQuietState() {
         let statusText = MessageNotificationAuthorizationPlan().statusText(
             authorizationStatus: .provisional,
             alertSetting: .disabled,
             notificationCenterSetting: .enabled
         )
 
-        XCTAssertEqual(statusText, "임시 허용됨: 알림센터에 조용히 전달됩니다. 테스트 알림 후 유지 또는 즉시 전달로 바꿔 주세요.")
-    }
-
-    func testBuildsQuietBootstrapNotificationRequest() throws {
-        let request = MessageNotificationAuthorizationPlan().makeBootstrapNotificationRequest()
-
-        XCTAssertEqual(request.identifier, MessageNotificationAuthorizationPlan.bootstrapNotificationIdentifier)
-        XCTAssertEqual(request.content.title, "우주사과 알림 준비")
-        XCTAssertEqual(request.content.body, "이 알림이 알림센터에 보이면 시스템 설정에서 배너를 켤 수 있습니다.")
-        XCTAssertNil(request.content.sound)
-        let trigger = try XCTUnwrap(request.trigger as? UNTimeIntervalNotificationTrigger)
-        XCTAssertEqual(trigger.timeInterval, 1, accuracy: 0.01)
-        XCTAssertFalse(trigger.repeats)
+        XCTAssertEqual(statusText, "임시 허용 상태입니다. 알림 설정에서 배너 또는 알림으로 바꿔 주세요.")
     }
 
     func testAddsCopyActionWhenOtpCodeIsDetected() {
