@@ -59,12 +59,9 @@ jobs:
                      -derivedDataPath build \
                      -destination 'platform=macOS,arch=arm64' \
                      CODE_SIGNING_ALLOWED=NO
-          
-          # Find and move the app
-          find build -name "*.app" -exec mv {} . \;
-          
+
           # Package into DMG
-          hdiutil create -volname "woojusagwa" -srcfolder Woojusagwa.app -ov -format UDZO woojusagwa-macos-arm64.dmg
+          hdiutil create -volname "woojusagwa" -srcfolder build/Build/Products/Release/Woojusagwa.app -ov -format UDZO woojusagwa-macos-arm64.dmg
 
       - name: Upload macOS Artifact
         uses: actions/upload-artifact@v4
