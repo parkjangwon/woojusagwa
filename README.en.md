@@ -1,5 +1,7 @@
 # Woojusagwa
 
+<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/ff768db0-64da-46bb-9164-7b60c6fa20cb" />
+
 <div align="center">
   <p>
     <a href="./README.md">한국어</a> |
