@@ -22,17 +22,35 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+      - name: Prepare Android signing
+        env:
+          ANDROID_SIGNING_KEYSTORE_BASE64: ${{ secrets.ANDROID_SIGNING_KEYSTORE_BASE64 }}
+          ANDROID_SIGNING_STORE_PASSWORD: ${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}
+          ANDROID_SIGNING_KEY_ALIAS: ${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}
+          ANDROID_SIGNING_KEY_PASSWORD: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
+        run: |
+          test -n "$ANDROID_SIGNING_KEYSTORE_BASE64"
+          test -n "$ANDROID_SIGNING_STORE_PASSWORD"
+          test -n "$ANDROID_SIGNING_KEY_ALIAS"
+          test -n "$ANDROID_SIGNING_KEY_PASSWORD"
+          echo "$ANDROID_SIGNING_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/woojusagwa-release.jks"
+
       - name: Test and Build Android
+        env:
+          ANDROID_SIGNING_STORE_FILE: ${{ runner.temp }}/woojusagwa-release.jks
+          ANDROID_SIGNING_STORE_PASSWORD: ${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}
+          ANDROID_SIGNING_KEY_ALIAS: ${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}
+          ANDROID_SIGNING_KEY_PASSWORD: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew --no-daemon testDebugUnitTest assembleDebug
+          ./gradlew --no-daemon testDebugUnitTest assembleRelease
 
       - name: Upload Android Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: woojusagwa-android-apk
-          path: android/app/build/outputs/apk/debug/*.apk
+          name: woojusagwa-android-release-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
 
   build-macos:
     name: Build macOS (Apple Silicon)
@@ -99,7 +117,7 @@ jobs:
             *.apk
             *.dmg
           draft: false
-          prerelease: true
+          prerelease: ${{ startsWith(github.ref_name, 'dev-') }}
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

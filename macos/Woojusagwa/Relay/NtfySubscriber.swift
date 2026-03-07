@@ -215,8 +215,8 @@ final class NtfySubscriber: ObservableObject {
 
     private static func defaultVersionLabel() -> String {
         let infoDictionary = Bundle.main.infoDictionary
-        let version = infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
-        let build = infoDictionary?["CFBundleVersion"] as? String ?? "1"
+        let version = infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+        let build = infoDictionary?["CFBundleVersion"] as? String ?? "100"
         return AppText.versionLabel(version: version, build: build)
     }
 }

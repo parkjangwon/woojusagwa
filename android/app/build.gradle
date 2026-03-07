@@ -3,6 +3,16 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+def releaseSigning = [
+    storeFile   : System.getenv("ANDROID_SIGNING_STORE_FILE"),
+    storePassword: System.getenv("ANDROID_SIGNING_STORE_PASSWORD"),
+    keyAlias    : System.getenv("ANDROID_SIGNING_KEY_ALIAS"),
+    keyPassword : System.getenv("ANDROID_SIGNING_KEY_PASSWORD"),
+]
+def hasReleaseSigning = releaseSigning.values().every { value ->
+    value != null && !value.trim().isEmpty()
+}
+
 android {
     namespace 'org.parkjw.woojusagwa'
     compileSdk 34
@@ -11,14 +21,28 @@ android {
         applicationId "org.parkjw.woojusagwa"
         minSdk 26
         targetSdk 34
-        versionCode 10
-        versionName "0.0.10"
+        versionCode 100
+        versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            if (hasReleaseSigning) {
+                storeFile file(releaseSigning.storeFile)
+                storePassword releaseSigning.storePassword
+                keyAlias releaseSigning.keyAlias
+                keyPassword releaseSigning.keyPassword
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

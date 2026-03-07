@@ -11,13 +11,13 @@ class MainActivityStateTest {
     @Test
     fun `creates empty state with version info`() {
         val state = MainActivityStateFactory().create(
-            versionName = "0.0.10",
-            versionCode = 10,
+            versionName = "1.0.0",
+            versionCode = 100,
             pairedMacs = emptyList()
         )
 
-        assertEquals("0.0.10", state.versionName)
-        assertEquals(10, state.versionCode)
+        assertEquals("1.0.0", state.versionName)
+        assertEquals(100, state.versionCode)
         assertEquals(0, state.pairedMacCount)
         assertEquals(0, state.enabledPairedMacCount)
         assertTrue(state.pairedMacRows.isEmpty())
@@ -27,8 +27,8 @@ class MainActivityStateTest {
     @Test
     fun `creates row state for each paired mac`() {
         val state = MainActivityStateFactory().create(
-            versionName = "0.0.10",
-            versionCode = 10,
+            versionName = "1.0.0",
+            versionCode = 100,
             pairedMacs = listOf(
                 PairedMac("mac-home", "개인 MacBook Pro", "https://ntfy.sh", "ws_home", true, 1_000L),
                 PairedMac("mac-work", "회사 MacBook Air", "https://relay.example", "ws_work", false, 2_000L)

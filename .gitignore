@@ -5,6 +5,9 @@ AGENTS.md
 android/.gradle/
 android/build/
 android/app/build/
+android/keystore.properties
+*.jks
+*.keystore
 
 macos/**/build/
 macos/WoojusagwaCore/.build/

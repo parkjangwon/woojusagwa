@@ -1,119 +1,273 @@
-# 우주사과 (woojusagwa) 🍎🚀
+# 우주사과
 
 <div align="center">
   <p>
-    <strong>한국어</strong> | 
+    <strong>한국어</strong> |
     <a href="./README.en.md">English</a>
   </p>
 </div>
 
-**갤럭시폰의 문자 알림을 Mac으로 자연스럽게 이어주는, 가장 작은 네이티브 브리지**
+**갤럭시폰 문자 알림을 Mac 알림센터로 이어주는 가장 작은 네이티브 브리지**
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Platform-Android%20%7C%20macOS-brightgreen" alt="Platform">
-  <img src="https://img.shields.io/badge/Language-Kotlin%20%7C%20Swift-orange" alt="Language">
-  <img src="https://img.shields.io/badge/License-MIT-blue" alt="License">
+  <img src="https://img.shields.io/badge/Platform-Android%20%7C%20macOS-5b8cff" alt="Platform">
+  <img src="https://img.shields.io/badge/Release-1.0.0-1f7a3f" alt="Release">
+  <img src="https://img.shields.io/badge/License-MIT-4c566a" alt="License">
 </p>
 
----
+## 우주사과가 하는 일
 
-## 📖 소개
+우주사과는 갤럭시폰에서 들어온 SMS 알림을 Mac의 네이티브 알림센터로 전달합니다.
 
-**우주사과**는 갤럭시 스마트폰을 쓰지만 Mac을 사랑하는 사람들을 위한 오픈소스 프로젝트입니다. 안드로이드와 macOS 사이에 거대한 동기화 플랫폼을 끼워 넣지 않고, 문자 알림 하나를 빠르고 조용하게 이어주는 데만 집중합니다.
+- 안드로이드는 문자 알림을 읽고
+- `ntfy` 토픽으로 밀어 넣고
+- 각 Mac은 자기 전용 토픽을 구독해서
+- macOS 알림센터 배너와 목록으로 보여줍니다
 
-> "갤럭시 문자 알림이 Mac에 네이티브하게 뜬다."  
-> 우주사과는 이 한 문장을 제품 요구사항처럼 다룹니다.
+계정도 없고, 별도 백엔드도 없고, 대시보드도 없습니다.  
+우주사과는 "갤럭시 문자 알림이 Mac에 뜬다"라는 한 가지 목적만 다룹니다.
 
-## 🍎 왜 우주사과인가
+## 철학
 
-- **작아야 합니다**: 계정, 클라우드, 대시보드, 분석 시스템 없이 동작해야 합니다.
-- **네이티브여야 합니다**: Android는 `NotificationListenerService`, macOS는 메뉴바와 알림 센터를 씁니다.
-- **너드 친화적이어야 합니다**: 무엇이 어디로 전달되는지 설명 가능해야 하고, 숨은 백엔드가 없어야 합니다.
-- **사생활을 침범하지 않아야 합니다**: 토픽은 비밀처럼 취급하고, 메시지 본문은 불필요하게 저장하지 않습니다.
+- 작아야 합니다: 로그인, 클라우드 동기화, 분석 시스템 없이 끝나야 합니다.
+- 네이티브여야 합니다: Android는 알림 접근 권한, macOS는 메뉴바와 알림센터를 씁니다.
+- 설명 가능해야 합니다: 갤럭시 1대가 Mac N대로 fan-out 되는 구조를 사용합니다.
+- 사생활을 덜 건드려야 합니다: 토픽은 비밀값처럼 취급하고, 서버에 별도 계정 데이터를 두지 않습니다.
 
-## 👩‍💻 누구를 위한가
+## 누구를 위한 도구인가
 
-- 갤럭시폰은 포기하고 싶지 않지만 Mac 위에서 일하는 사람
-- "동기화 플랫폼"보다 작은 유틸리티를 선호하는 사람
-- 직접 빌드하고 구조를 이해하는 것을 즐기는 사람
-- 메시지 알림 하나 때문에 개인정보를 다른 서버에 더 넘기고 싶지 않은 사람
+- 갤럭시폰은 계속 쓰고 싶지만 업무는 Mac에서 하는 사람
+- 거대한 "연동 플랫폼"보다 작은 네이티브 유틸리티를 선호하는 사람
+- relay 경로와 저장 위치를 직접 이해하고 싶은 사람
+- OTP나 문자 확인을 위해 핸드폰을 계속 집지 않으려는 사람
 
----
+## 현재 기능
 
-## ✨ 핵심 기능
+- Galaxy SMS 알림을 macOS 알림센터로 전달
+- macOS 메뉴바에서 연결 상태, 마지막 수신 메시지, 현재 토픽 확인
+- OTP 감지 시 macOS 알림에 `복사하기` 액션 제공
+- 한국어, 영어 UI 전환 지원
+- 갤럭시 1대 -> Mac 여러 대 동시 전달
+- Android에서 연결된 Mac 켜기/끄기/삭제
+- Mac에서 새 페어링 QR 생성으로 개별 토픽 재발급
 
-- **실시간 문자 전달**: 삼성 메시지 및 구글 메시지 알림을 macOS 알림 센터로 즉시 전달
-- **ntfy 기반 설계**: 별도의 회원가입이나 개인정보 저장 없이 오픈소스 릴레이 서버 활용
-- **QR 코드 페어링**: Mac 앱에서 생성된 QR 코드를 스마트폰으로 스캔하는 것만으로 설정 완료
-- **네이티브 경험**: 각 플랫폼(Android, macOS)의 네이티브 기능을 활용한 최적의 성능과 배터리 효율
-- **보안 중심**: 랜덤하게 생성되는 토픽(Topic)을 비밀번호처럼 사용하여 데이터 노출 최소화
-- **빠른 확인과 복사**: macOS 메뉴바에서 마지막으로 받은 메시지를 바로 확인하고 복사
+OTP 감지는 현재 한국어, 영어, 일본어, 중국어 메시지 키워드를 기준으로 동작합니다.
 
----
+## 멀티 Mac 동작 방식
 
-## 🛠 아키텍처
+우주사과는 **갤럭시 1대 + Mac N대** 모델입니다.
 
-```mermaid
-graph LR
-    A[갤럭시 스마트폰] -- 알림 캡처 --> B[Android 앱]
-    B -- ntfy Publish --> C((ntfy.sh 서버))
-    C -- ntfy Subscribe --> D[macOS 앱]
-    D -- 알림 센터 호출 --> E[Mac 알림 표시]
+- 각 Mac은 자기만의 `device_id`, `device_name`, `topic`을 가집니다.
+- Mac 메뉴바 앱에서 QR을 만들면 그 Mac 전용 정보가 들어갑니다.
+- Android 앱은 스캔된 Mac 목록을 저장합니다.
+- 문자 알림 1건이 오면 Android 앱이 활성화된 Mac 전부에 fan-out 전송합니다.
+
+예시:
+
+- 집 MacBook Pro
+- 회사 MacBook Air
+
+둘 다 연결되어 있으면 같은 문자 알림이 두 Mac에 모두 갑니다.
+
+중요한 점:
+
+- Android에서 Mac을 삭제하면 그 Mac으로 **더 이상 보내지 않게만** 됩니다.
+- `ntfy` 서버에서 토픽 자체를 지우지는 않습니다.
+- 완전한 토픽 교체가 필요하면 Mac에서 `새 페어링 QR 만들기`를 누르면 됩니다.
+
+## 설치 파일
+
+공식 GitHub Release에는 보통 아래 두 파일이 올라갑니다.
+
+- `app-release.apk`: Android 설치 파일
+- `woojusagwa-macos-arm64.dmg`: macOS 설치 이미지
+
+`v1.0.0`부터 Android APK는 **고정 release keystore로 서명된 APK**를 기준으로 배포합니다.  
+그래서 같은 서명 계열의 다음 버전 APK로 정상 업데이트가 가능합니다.
+
+## 빠른 시작
+
+### 1. macOS 앱 설치
+
+1. GitHub Release에서 `woojusagwa-macos-arm64.dmg`를 내려받습니다.
+2. DMG를 열고 `우주사과.app`을 `Applications`로 드래그합니다.
+3. 반드시 `/Applications/우주사과.app`를 실행합니다.
+4. 메뉴바에 우주사과 아이콘이 뜨면 클릭합니다.
+5. 처음 실행 시 macOS 알림 권한을 허용합니다.
+
+권장:
+
+- `시스템 설정 > 알림 > 우주사과`에서 배너와 알림센터 표시를 켜세요.
+- DMG 안에서 바로 실행하지 말고, Applications로 복사해서 실행하세요.
+
+### 2. Android 앱 설치
+
+1. GitHub Release에서 `app-release.apk`를 내려받아 설치합니다.
+2. 우주사과 앱을 엽니다.
+3. `알림 접근 권한 열기`를 눌러 Android 알림 접근 권한 화면으로 이동합니다.
+4. `우주사과`를 허용합니다.
+
+지원 대상은 문자 알림입니다.
+
+- 삼성 메시지
+- Google Messages
+
+### 3. 첫 페어링
+
+1. Mac 메뉴바 앱에서 `새 페어링 QR 만들기`를 누릅니다.
+2. Android 앱에서 `Mac과 페어링하기 (QR 스캔)`을 누릅니다.
+3. QR을 스캔합니다.
+4. Android 앱의 `연결된 Mac` 목록에 새 Mac이 보이면 완료입니다.
+
+Mac을 여러 대 연결하려면 각 Mac에서 같은 과정을 반복하면 됩니다.
+
+### 4. 동작 확인
+
+1. 갤럭시폰으로 테스트 문자를 받습니다.
+2. Mac 메뉴바 상태가 수신 중 상태로 바뀌는지 봅니다.
+3. macOS 알림센터에 배너가 뜨는지 확인합니다.
+4. OTP 문자인 경우 `복사하기` 버튼이 보이는지 확인합니다.
+
+## 권한 설정 가이드
+
+### Android
+
+우주사과는 문자 내용을 직접 읽는 앱이 아닙니다.  
+문자 앱이 띄운 **알림**을 읽습니다.
+
+필요한 권한:
+
+- 알림 접근 권한
+
+설정 경로:
+
+- `설정 > 알림 > 알림 접근 권한`
+
+여기서 `우주사과`를 허용하면 됩니다.
+
+### macOS
+
+우주사과는 수신한 내용을 메뉴바와 알림센터에 보여줍니다.
+
+필요한 권한:
+
+- 알림 허용
+
+설정 경로:
+
+- `시스템 설정 > 알림 > 우주사과`
+
+여기서 아래 항목을 켜는 것을 권장합니다.
+
+- 알림 허용
+- 알림센터 표시
+- 배너 또는 알림 스타일
+
+## 문제 해결
+
+### macOS 알림이 안 뜰 때
+
+확인 순서:
+
+1. `우주사과.app`를 `/Applications`에서 실행했는지 확인
+2. 메뉴바 앱 상태가 `알림 권한 필요`인지 확인
+3. `시스템 설정 > 알림 > 우주사과`에서 허용 여부 확인
+4. 집중 모드가 켜져 있지 않은지 확인
+5. 메뉴바의 `테스트 알림`으로 알림센터 동작 확인
+
+### Android에서 Mac이 안 보일 때
+
+- QR을 다시 스캔해 보세요.
+- 이미 같은 Mac을 스캔한 경우 `device_id` 기준으로 기존 정보가 갱신됩니다.
+- Mac에서 `새 페어링 QR 만들기`를 누르면 새 토픽으로 갈아탈 수 있습니다.
+
+### APK 업데이트 설치가 안 될 때
+
+업데이트 설치에는 아래 두 가지가 같아야 합니다.
+
+- `applicationId`
+- APK 서명 인증서
+
+`v1.0.0`부터 공식 릴리스 APK는 고정 release keystore로 서명됩니다.  
+그 이전 debug APK나 로컬 debug APK에서 넘어오는 경우에는 같은 서명이 아니어서 업데이트 설치가 되지 않을 수 있습니다. 그런 경우 한 번 삭제 후 `app-release.apk` 계열로 다시 설치하면 이후 버전부터는 업데이트가 쉬워집니다.
+
+## 저장과 보안
+
+- 메시지 본문을 위한 별도 백엔드 저장소는 없습니다.
+- Android는 연결된 Mac 목록과 토픽 정보를 로컬에 저장합니다.
+- macOS는 자기 Mac의 페어링 정보와 최근 상태를 로컬에 저장합니다.
+- 토픽 문자열은 사실상 비밀키처럼 다뤄야 합니다.
+
+우주사과는 개인정보 시스템이 아니라 relay 기반의 작은 유틸리티입니다.  
+그래서 "어디에 저장되는가"와 "어떻게 지우는가"가 비교적 단순합니다.
+
+## 개발 환경
+
+### Android
+
+- Android Studio
+- JDK 17
+- Android SDK 34
+
+### macOS
+
+- Xcode 15 이상 권장
+- Apple Silicon Mac 기준 빌드 검증
+
+## 로컬 빌드
+
+### Android
+
+```bash
+cd android
+./gradlew --no-daemon testDebugUnitTest assembleRelease
 ```
 
----
+### macOS Core 테스트
 
-## 🚀 시작하기
+```bash
+cd macos/WoojusagwaCore
+swift test
+```
 
-### 1. macOS 설정
-1. `macos/Woojusagwa/` 프로젝트를 Xcode로 열어 빌드하거나 배포된 앱을 실행합니다.
-2. 메뉴바의 **우주사과 아이콘**을 클릭합니다.
-3. **"새 페어링 QR 만들기"** 버튼을 눌러 Mac 전용 비밀 토픽이 담긴 QR 코드를 띄웁니다.
+### macOS 앱 빌드
 
-### 2. Android 설정
-1. `android/` 폴더의 프로젝트를 Android Studio로 빌드하여 스마트폰에 설치합니다.
-2. 앱을 실행하고 **"Mac과 페어링하기 (QR 스캔)"** 버튼을 눌러 Mac의 QR 코드를 스캔합니다.
-3. **설정 > 알림 > 알림 접근 권한**에서 `woojusagwa` 앱의 권한을 허용합니다.
+```bash
+xcodebuild -project macos/Woojusagwa/Woojusagwa.xcodeproj \
+  -scheme Woojusagwa \
+  -configuration Release \
+  -derivedDataPath macos/build \
+  -destination 'platform=macOS,arch=arm64' \
+  CODE_SIGNING_ALLOWED=NO
+```
 
-### 3. 확인
-1. Android에서 본인에게 테스트 문자를 보내거나 기존 문자 알림을 기다립니다.
-2. Mac 메뉴바 앱의 상태가 **Receiving messages**로 바뀌고, 마지막 수신 메시지가 표시되는지 확인합니다.
+## 릴리스 유지보수 메모
 
----
+Android 업데이트 가능한 APK를 배포하려면 같은 release keystore를 계속 써야 합니다.
 
-## 📂 프로젝트 구조
+GitHub Actions는 아래 시크릿을 사용합니다.
+
+- `ANDROID_SIGNING_KEYSTORE_BASE64`
+- `ANDROID_SIGNING_STORE_PASSWORD`
+- `ANDROID_SIGNING_KEY_ALIAS`
+- `ANDROID_SIGNING_KEY_PASSWORD`
+
+릴리스 태그 규칙:
+
+- `dev-*`: 프리릴리스
+- `v*`: 정식 릴리스
+
+## 저장소 구조
 
 ```text
 woojusagwa/
- ├─ android/      # Kotlin 기반 Android 앱 (NotificationListener)
- ├─ macos/        # SwiftUI 기반 macOS 메뉴바 앱 (Ntfy Subscriber)
- ├─ contracts/    # 플랫폼 간 통신 규격 (JSON Schema)
- ├─ docs/         # 설계 문서 및 PDCA 개발 기록
- └─ README.md     # 프로젝트 메인 가이드 (한국어)
+├─ android/      # Android 앱
+├─ macos/        # macOS 메뉴바 앱
+├─ contracts/    # QR payload / relay message schema
+├─ docs/         # 설계와 계획 문서
+└─ assets/       # 로고와 기타 정적 자산
 ```
 
----
+## 라이선스
 
-## 🛡 보안 및 개인정보
-
-- 본 프로젝트는 메시지 내용을 어떠한 서버에도 저장하지 않습니다.
-- 모든 데이터는 `ntfy.sh`를 통해 전달되며, 토픽 이름이 유출되지 않는 한 안전합니다.
-- 민감한 개인 정보 보호를 위해 로컬 로그에는 메시지 본문을 남기지 않습니다.
-
----
-
-## 🤝 기여하기
-
-버그 제보나 기능 제안은 언제나 환영합니다! Issue를 생성하거나 Pull Request를 보내주세요.
-
----
-
-## ⚖️ 라이선스
-
-이 프로젝트는 [MIT License](./LICENSE)를 따릅니다.
-
----
-
-<p align="center">
-  <b>parkjangwon (vim@kakao.com)</b>
-</p>
+[MIT License](./LICENSE)
