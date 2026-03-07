@@ -68,6 +68,11 @@ struct MenuBarView: View {
                 .buttonStyle(.bordered)
             }
 
+            Button("알림 설정 열기") {
+                subscriber.openNotificationSettings()
+            }
+            .buttonStyle(.bordered)
+
             HStack(spacing: 10) {
                 Button("마지막 메시지 복사") {
                     subscriber.copyLastMessage()

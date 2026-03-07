@@ -68,6 +68,10 @@ final class NtfySubscriber: ObservableObject {
         notificationManager.requestNotificationAuthorization()
     }
 
+    func openNotificationSettings() {
+        notificationManager.openNotificationSettings()
+    }
+
     func refreshNotificationAuthorizationStatus() {
         notificationManager.refreshAuthorizationStatus()
     }
