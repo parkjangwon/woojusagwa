@@ -1,10 +1,8 @@
 import Foundation
 import UserNotifications
 
-class NotificationManager {
-    static let shared = NotificationManager()
-    
-    private init() {
+final class NotificationManager {
+    init() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
             if granted {
                 print("Notification Permission Granted")

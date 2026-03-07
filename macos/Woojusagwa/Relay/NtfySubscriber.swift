@@ -1,16 +1,74 @@
 import Foundation
 import Combine
+import AppKit
 
-class NtfySubscriber: ObservableObject {
-    @Published var connectionStatus: String = "Disconnected"
-    @Published var lastMessage: String = "No messages yet"
+final class NtfySubscriber: ObservableObject {
+    @Published private(set) var connectionStatus: String
+    @Published private(set) var lastMessage: String
+    @Published private(set) var topicLabel: String
 
     private var urlSession: URLSession?
     private var dataTask: URLSessionDataTask?
+    private let pairingStore: PairingConfigurationStore
+    private let notificationManager: NotificationManager
+    private let relayDecoder = RelayEnvelopeDecoder()
+
+    init(
+        pairingStore: PairingConfigurationStore,
+        notificationManager: NotificationManager
+    ) {
+        self.pairingStore = pairingStore
+        self.notificationManager = notificationManager
+        self.connectionStatus = "Ready to pair"
+        self.lastMessage = "No messages yet"
+        self.topicLabel = "Not paired"
+
+        restorePairingIfAvailable()
+    }
     
-    func subscribe(server: String, topic: String) {
+    func prepareFreshPairingPayload() throws -> String {
+        let payload = try PairingPayload(topic: makeTopic())
+        try connect(using: payload)
+        return try payload.encodedJSONString()
+    }
+
+    func copyLastMessage() {
+        guard !lastMessage.isEmpty, lastMessage != "No messages yet" else {
+            return
+        }
+
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(lastMessage, forType: .string)
+    }
+
+    func disconnect() {
+        dataTask?.cancel()
+        dataTask = nil
+        urlSession?.invalidateAndCancel()
+        urlSession = nil
+        connectionStatus = "Disconnected"
+    }
+
+    private func connect(using payload: PairingPayload) throws {
+        try pairingStore.save(payload)
+        topicLabel = payload.topic
+        subscribe(server: payload.server, topic: payload.topic)
+    }
+
+    private func restorePairingIfAvailable() {
+        guard let payload = try? pairingStore.load() else {
+            return
+        }
+
+        topicLabel = payload.topic
+        subscribe(server: payload.server, topic: payload.topic)
+    }
+
+    private func subscribe(server: String, topic: String) {
         guard !topic.isEmpty else { return }
-        
+        disconnect()
+
         let urlString = "\(server)/\(topic)/json"
         guard let url = URL(string: urlString) else { return }
         
@@ -20,55 +78,53 @@ class NtfySubscriber: ObservableObject {
         configuration.timeoutIntervalForRequest = TimeInterval(Double.infinity)
         configuration.timeoutIntervalForResource = TimeInterval(Double.infinity)
         
-        urlSession = URLSession(configuration: configuration, delegate: SessionDelegate(onMessage: { [weak self] jsonString in
-            self?.handleIncomingMessage(jsonString)
+        urlSession = URLSession(configuration: configuration, delegate: SessionDelegate(onLine: { [weak self] line in
+            self?.handleIncomingLine(line)
         }), delegateQueue: nil)
         
         dataTask = urlSession?.dataTask(with: url)
         dataTask?.resume()
         
-        connectionStatus = "Subscribed: \(topic)"
+        connectionStatus = "Listening on ntfy"
     }
     
-    private func handleIncomingMessage(_ jsonString: String) {
-        guard let data = jsonString.data(using: .utf8) else { return }
-        
+    private func handleIncomingLine(_ line: String) {
         do {
-            if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-               let messageBody = json["message"] as? String {
-                
-                // ntfy.sh returns the published payload in the "message" field of its SSE JSON
-                // If we published a JSON string, we need to parse it again
-                if let payloadData = messageBody.data(using: .utf8),
-                   let payload = try? JSONSerialization.jsonObject(with: payloadData) as? [String: Any] {
-                    
-                    let title = payload["title"] as? String ?? "New Message"
-                    let body = payload["body"] as? String ?? ""
-                    
-                    DispatchQueue.main.async {
-                        self.lastMessage = "\(title): \(body)"
-                        NotificationManager.shared.show(title: title, body: body)
-                    }
-                }
+            let payload = try relayDecoder.decode(line: line)
+            let summary = "\(payload.title): \(payload.body)"
+
+            DispatchQueue.main.async {
+                self.lastMessage = summary
+                self.connectionStatus = "Receiving messages"
+                self.notificationManager.show(title: payload.title, body: payload.body)
             }
         } catch {
-            print("Error parsing ntfy message: \(error)")
+            guard let relayError = error as? RelayEnvelopeError else {
+                connectionStatus = "Relay error"
+                return
+            }
+
+            switch relayError {
+            case .invalidEnvelope, .missingMessage:
+                break
+            case .invalidPayload:
+                connectionStatus = "Relay payload error"
+            }
         }
     }
-    
-    func disconnect() {
-        dataTask?.cancel()
-        connectionStatus = "Disconnected"
+
+    private func makeTopic() -> String {
+        let raw = UUID().uuidString.replacingOccurrences(of: "-", with: "").lowercased()
+        return "ws_\(raw.prefix(12))"
     }
 }
 
-// Simple delegate to handle streaming data line by line
-class SessionDelegate: NSObject, URLSessionDataDelegate {
-    let onMessage: (String) -> Void
+final class SessionDelegate: NSObject, URLSessionDataDelegate {
+    let onLine: (String) -> Void
     private var buffer = Data()
 
-    init(onMessage: @escaping (String) -> Void) {
-        self.onMessage = onMessage
+    init(onLine: @escaping (String) -> Void) {
+        self.onLine = onLine
     }
 
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
@@ -79,7 +135,7 @@ class SessionDelegate: NSObject, URLSessionDataDelegate {
             buffer.removeSubrange(0..<range.upperBound)
             
             if let line = String(data: lineData, encoding: .utf8), !line.trimmingCharacters(in: .whitespaces).isEmpty {
-                onMessage(line)
+                onLine(line)
             }
         }
     }

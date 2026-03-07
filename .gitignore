@@ -1,0 +1,13 @@
+.omx/
+.DS_Store
+AGENTS.md
+
+android/.gradle/
+android/build/
+android/app/build/
+
+macos/**/build/
+macos/WoojusagwaCore/.build/
+macos/**/*.xcuserdatad/
+
+DerivedData/

@@ -1,20 +1,19 @@
 package org.parkjw.woojusagwa
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import org.parkjw.woojusagwa.settings.SettingsRepository
-import org.parkjw.woojusagwa.R // Explicit R import
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
-import org.json.JSONObject
+import org.parkjw.woojusagwa.pairing.PairingPayloadParser
+import org.parkjw.woojusagwa.settings.SettingsRepository
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var settings: SettingsRepository
     private lateinit var statusText: TextView
+    private val pairingPayloadParser = PairingPayloadParser()
 
     private val barcodeLauncher = registerForActivityResult(ScanContract()) { result ->
         if (result.contents != null) {
@@ -43,24 +42,26 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateStatus() {
         if (settings.isConfigured()) {
-            statusText.text = "Connected: ${settings.getTopic()}"
+            statusText.text = getString(
+                R.string.status_connected,
+                settings.getServer(),
+                settings.getTopic()
+            )
         } else {
-            statusText.text = "Status: Not Paired"
+            statusText.text = getString(R.string.status_not_paired)
         }
     }
 
     private fun handlePairing(qrData: String) {
-        try {
-            val json = JSONObject(qrData)
-            val topic = json.getString("topic")
-            val server = json.optString("server", "https://ntfy.sh")
-            
-            settings.setTopic(topic)
-            settings.setServer(server)
-            
-            updateStatus()
-        } catch (e: Exception) {
-            statusText.text = "Error: Invalid QR Code"
+        val payload = pairingPayloadParser.parse(qrData)
+
+        if (payload == null) {
+            statusText.text = getString(R.string.status_invalid_qr)
+            return
         }
+
+        settings.setTopic(payload.topic)
+        settings.setServer(payload.server)
+        updateStatus()
     }
 }

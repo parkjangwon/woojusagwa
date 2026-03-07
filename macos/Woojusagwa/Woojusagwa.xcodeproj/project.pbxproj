@@ -1,0 +1,397 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2CAA6B35803E4FE59516B7EB /* NtfySubscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3739875A6C7D64DEC11CA0 /* NtfySubscriber.swift */; };
+		300C85EE4E96F76590BB3DCC /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96A1210C10FB76FFB3706D1 /* MenuBarView.swift */; };
+		355D01E90C806E866C6106E5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 219808AD046235BC916429B5 /* Cocoa.framework */; };
+		460413F6706635F1E6267FD0 /* PairingPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3AE85470CDA16E4EACDB62 /* PairingPayload.swift */; };
+		71D965FE3C64DD05EA968E8B /* WoojusagwaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EECED1262731DB8CB5D5C257 /* WoojusagwaApp.swift */; };
+		AFDC313F4DE02F40813482F5 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2970C8D59BA6A767F0E4AAD0 /* NotificationManager.swift */; };
+		C6AE41BF1DA24CDFE4BA8CB3 /* PairingConfigurationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB1DFBEC0E54A8C29139234C /* PairingConfigurationStore.swift */; };
+		D675843F39B3D8403D44D583 /* RelayEnvelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0655963985EAAB3F88228D /* RelayEnvelope.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		219808AD046235BC916429B5 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		2970C8D59BA6A767F0E4AAD0 /* NotificationManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotificationManager.swift; path = Notifications/NotificationManager.swift; sourceTree = "<group>"; };
+		2A3739875A6C7D64DEC11CA0 /* NtfySubscriber.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NtfySubscriber.swift; path = Relay/NtfySubscriber.swift; sourceTree = "<group>"; };
+		7E0655963985EAAB3F88228D /* RelayEnvelope.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RelayEnvelope.swift; path = ../WoojusagwaCore/Sources/WoojusagwaCore/RelayEnvelope.swift; sourceTree = "<group>"; };
+		C96A1210C10FB76FFB3706D1 /* MenuBarView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MenuBarView.swift; path = UI/MenuBarView.swift; sourceTree = "<group>"; };
+		CB1DFBEC0E54A8C29139234C /* PairingConfigurationStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PairingConfigurationStore.swift; path = ../WoojusagwaCore/Sources/WoojusagwaCore/PairingConfigurationStore.swift; sourceTree = "<group>"; };
+		D0BD6ACBB59F494CDAD26B48 /* Woojusagwa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Woojusagwa.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD3AE85470CDA16E4EACDB62 /* PairingPayload.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PairingPayload.swift; path = ../WoojusagwaCore/Sources/WoojusagwaCore/PairingPayload.swift; sourceTree = "<group>"; };
+		EECED1262731DB8CB5D5C257 /* WoojusagwaApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WoojusagwaApp.swift; path = App/WoojusagwaApp.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		043265ECBCD4470B6D021E7A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				355D01E90C806E866C6106E5 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		002F6A06A03AF30BC63E6251 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		1405155D214F37516FBBC281 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				437ABC40FB8DE6CE5AD446BE /* OS X */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		32D44620CF3D24E36509568B /* WoojusagwaCore */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = WoojusagwaCore;
+			path = ../WoojusagwaCore/Sources/WoojusagwaCore;
+			sourceTree = "<group>";
+		};
+		3A1A73DADAF4EA6A845BC180 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
+		437ABC40FB8DE6CE5AD446BE /* OS X */ = {
+			isa = PBXGroup;
+			children = (
+				219808AD046235BC916429B5 /* Cocoa.framework */,
+			);
+			name = "OS X";
+			sourceTree = "<group>";
+		};
+		5FEBCA9990965AD15D8527CE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D0BD6ACBB59F494CDAD26B48 /* Woojusagwa.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A91D730FAD609793208207FE = {
+			isa = PBXGroup;
+			children = (
+				5FEBCA9990965AD15D8527CE /* Products */,
+				1405155D214F37516FBBC281 /* Frameworks */,
+				C61A5BBA0909158912AD886F /* Woojusagwa */,
+				32D44620CF3D24E36509568B /* WoojusagwaCore */,
+				DD3AE85470CDA16E4EACDB62 /* PairingPayload.swift */,
+				7E0655963985EAAB3F88228D /* RelayEnvelope.swift */,
+				CB1DFBEC0E54A8C29139234C /* PairingConfigurationStore.swift */,
+			);
+			sourceTree = "<group>";
+		};
+		C61A5BBA0909158912AD886F /* Woojusagwa */ = {
+			isa = PBXGroup;
+			children = (
+				FC7472D449FC36ED9108505C /* App */,
+				CFC5C5BDE8B72CB312F9AF0F /* Notifications */,
+				CF9773837B27FD9227E04DD1 /* Relay */,
+				3A1A73DADAF4EA6A845BC180 /* UI */,
+				002F6A06A03AF30BC63E6251 /* Resources */,
+				EECED1262731DB8CB5D5C257 /* WoojusagwaApp.swift */,
+				2970C8D59BA6A767F0E4AAD0 /* NotificationManager.swift */,
+				2A3739875A6C7D64DEC11CA0 /* NtfySubscriber.swift */,
+				C96A1210C10FB76FFB3706D1 /* MenuBarView.swift */,
+			);
+			name = Woojusagwa;
+			path = .;
+			sourceTree = "<group>";
+		};
+		CF9773837B27FD9227E04DD1 /* Relay */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Relay;
+			sourceTree = "<group>";
+		};
+		CFC5C5BDE8B72CB312F9AF0F /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Notifications;
+			sourceTree = "<group>";
+		};
+		FC7472D449FC36ED9108505C /* App */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = App;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		12ADBEFF3FC1ABA557E99A8D /* Woojusagwa */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9D53DF14BF190ABB93DDF1DE /* Build configuration list for PBXNativeTarget "Woojusagwa" */;
+			buildPhases = (
+				58031FCC35EE3BE0000074E1 /* Sources */,
+				043265ECBCD4470B6D021E7A /* Frameworks */,
+				EFB82852D75FCBAE74DB0857 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Woojusagwa;
+			productName = Woojusagwa;
+			productReference = D0BD6ACBB59F494CDAD26B48 /* Woojusagwa.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5046507A8E238198B0E67A1E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+			};
+			buildConfigurationList = F7DAA5EBAEA6B053B31F668D /* Build configuration list for PBXProject "Woojusagwa" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A91D730FAD609793208207FE;
+			minimizedProjectReferenceProxies = 0;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 5FEBCA9990965AD15D8527CE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				12ADBEFF3FC1ABA557E99A8D /* Woojusagwa */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EFB82852D75FCBAE74DB0857 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		58031FCC35EE3BE0000074E1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				71D965FE3C64DD05EA968E8B /* WoojusagwaApp.swift in Sources */,
+				AFDC313F4DE02F40813482F5 /* NotificationManager.swift in Sources */,
+				2CAA6B35803E4FE59516B7EB /* NtfySubscriber.swift in Sources */,
+				300C85EE4E96F76590BB3DCC /* MenuBarView.swift in Sources */,
+				460413F6706635F1E6267FD0 /* PairingPayload.swift in Sources */,
+				D675843F39B3D8403D44D583 /* RelayEnvelope.swift in Sources */,
+				C6AE41BF1DA24CDFE4BA8CB3 /* PairingConfigurationStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0A6841D7BA99FD71BB4430B0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.parkjw.woojusagwa.macos;
+				PRODUCT_NAME = Woojusagwa;
+				SDKROOT = macosx;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		53A02C93D1D3A10F1E473F14 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		5D1A575F2F293933B82FC42B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		6003E8CF11092AEC02FC824A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.parkjw.woojusagwa.macos;
+				PRODUCT_NAME = Woojusagwa;
+				SDKROOT = macosx;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9D53DF14BF190ABB93DDF1DE /* Build configuration list for PBXNativeTarget "Woojusagwa" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A6841D7BA99FD71BB4430B0 /* Release */,
+				6003E8CF11092AEC02FC824A /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F7DAA5EBAEA6B053B31F668D /* Build configuration list for PBXProject "Woojusagwa" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D1A575F2F293933B82FC42B /* Debug */,
+				53A02C93D1D3A10F1E473F14 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5046507A8E238198B0E67A1E /* Project object */;
+}

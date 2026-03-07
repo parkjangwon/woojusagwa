@@ -7,9 +7,23 @@
   </p>
 </div>
 
-**Galaxy SMS → Mac notification relay.**
+**A tiny native bridge that makes Galaxy SMS feel at home on your Mac.**
 
-A minimalist native app to forward Galaxy smartphone text notifications to macOS using `ntfy`.
+A minimalist open-source utility for people who love Galaxy phones and still live on a Mac all day. Woojusagwa does one job: forward SMS notifications to macOS without adding accounts, dashboards, or a custom backend.
+
+## Why This Exists
+
+- **Small by design**: no sync platform, no account system, no analytics.
+- **Native by default**: Android captures notifications natively, macOS receives them natively.
+- **Understandable by nerds**: the relay path is simple enough to inspect and reason about.
+- **Privacy first**: the `ntfy` topic is treated like a secret and message content is not stored unnecessarily.
+
+## Who It Is For
+
+- Galaxy phone users who work on a Mac
+- People who prefer tiny utilities over heavy "ecosystems"
+- Builders who want to inspect the whole relay path
+- Anyone who does not want SMS forwarding to depend on a private backend
 
 ---
 
@@ -20,6 +34,7 @@ A minimalist native app to forward Galaxy smartphone text notifications to macOS
 - **QR Pairing**: Easy setup with QR code scanning.
 - **Native Experience**: Kotlin (Android) and SwiftUI (macOS) implementation.
 - **Privacy First**: No custom backend, no data storage.
+- **Quick Copy on Mac**: See the latest message in the menu bar and copy it fast.
 
 ## 🛠 Architecture
 

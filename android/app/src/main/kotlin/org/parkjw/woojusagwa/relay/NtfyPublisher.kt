@@ -9,7 +9,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.parkjw.woojusagwa.settings.SettingsRepository
 import java.io.IOException
 
-class NtfyPublisher(private val context: Context) {
+class NtfyPublisher(context: Context) {
 
     private val TAG = "NtfyPublisher"
     private val client = OkHttpClient()
@@ -42,7 +42,7 @@ class NtfyPublisher(private val context: Context) {
                 if (!response.isSuccessful) {
                     Log.e(TAG, "Server returned error: ${response.code}")
                 } else {
-                    Log.d(TAG, "Successfully published message to topic: $topic")
+                    Log.d(TAG, "Successfully published relay message")
                 }
                 response.close()
             }
