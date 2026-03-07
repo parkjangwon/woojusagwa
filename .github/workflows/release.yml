@@ -47,17 +47,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Archive macOS Source
+      - name: Build macOS App
         run: |
           cd macos
-          # 현재는 소스 파일만 있으므로 Zip으로 압축하여 전달 (추후 xcodebuild 연동)
-          zip -r Woojusagwa-macOS-Source.zip .
+          # Create build directory
+          mkdir -p build
+          
+          # Build the app using xcodebuild (Apple Silicon target)
+          # Note: Adjust scheme name if necessary (default is project folder name)
+          xcodebuild -project Woojusagwa/Woojusagwa.xcodeproj \
+                     -scheme Woojusagwa \
+                     -configuration Release \
+                     -derivedDataPath build \
+                     -destination 'platform=macOS,arch=arm64' \
+                     CODE_SIGNING_ALLOWED=NO
+          
+          # Find and move the app
+          find build -name "*.app" -exec mv {} . \;
+          
+          # Package into DMG
+          hdiutil create -volname "woojusagwa" -srcfolder Woojusagwa.app -ov -format UDZO woojusagwa-macos-arm64.dmg
 
       - name: Upload macOS Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: woojusagwa-macos-zip
-          path: macos/Woojusagwa-macOS-Source.zip
+          name: woojusagwa-macos-dmg
+          path: macos/woojusagwa-macos-arm64.dmg
 
   create-release:
     name: Create GitHub Release
@@ -76,7 +91,7 @@ jobs:
         with:
           files: |
             *.apk
-            *.zip
+            *.dmg
           draft: false
           prerelease: true
           generate_release_notes: true
