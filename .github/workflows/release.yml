@@ -6,6 +6,9 @@ on:
       - 'dev-*'
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   build-android:
     name: Build Android APK
