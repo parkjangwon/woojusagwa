@@ -1,25 +1,35 @@
 import Foundation
-import Testing
+import XCTest
 @testable import WoojusagwaCore
 
-struct PairingConfigurationStoreTests {
-    @Test
-    func savesAndLoadsPayload() throws {
-        let defaults = try #require(UserDefaults(suiteName: "WoojusagwaCoreTests.\(UUID().uuidString)"))
+final class PairingConfigurationStoreTests: XCTestCase {
+    func testSavesAndLoadsPayload() throws {
+        let suiteName = "WoojusagwaCoreTests.\(UUID().uuidString)"
+        guard let defaults = UserDefaults(suiteName: suiteName) else {
+            XCTFail("Expected dedicated UserDefaults suite")
+            return
+        }
+
         let store = PairingConfigurationStore(defaults: defaults)
         let payload = try PairingPayload(topic: "ws_saved", server: "https://relay.example")
 
         try store.save(payload)
         let restored = try store.load()
 
-        #expect(restored == payload)
+        XCTAssertEqual(restored, payload)
+        defaults.removePersistentDomain(forName: suiteName)
     }
 
-    @Test
-    func returnsNilWhenNothingWasSaved() throws {
-        let defaults = try #require(UserDefaults(suiteName: "WoojusagwaCoreTests.\(UUID().uuidString)"))
+    func testReturnsNilWhenNothingWasSaved() throws {
+        let suiteName = "WoojusagwaCoreTests.\(UUID().uuidString)"
+        guard let defaults = UserDefaults(suiteName: suiteName) else {
+            XCTFail("Expected dedicated UserDefaults suite")
+            return
+        }
+
         let store = PairingConfigurationStore(defaults: defaults)
 
-        #expect(try store.load() == nil)
+        XCTAssertNil(try store.load())
+        defaults.removePersistentDomain(forName: suiteName)
     }
 }

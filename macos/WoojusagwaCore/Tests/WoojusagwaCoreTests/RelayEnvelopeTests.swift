@@ -1,27 +1,24 @@
-import Testing
+import XCTest
 @testable import WoojusagwaCore
 
-struct RelayEnvelopeTests {
-    @Test
-    func decodesRelayMessageFromNtfyEnvelope() throws {
+final class RelayEnvelopeTests: XCTestCase {
+    func testDecodesRelayMessageFromNtfyEnvelope() throws {
         let line = #"{"message":"{\"title\":\"Alice\",\"body\":\"Landing in 10\"}"}"#
         let payload = try RelayEnvelopeDecoder().decode(line: line)
 
-        #expect(payload.title == "Alice")
-        #expect(payload.body == "Landing in 10")
+        XCTAssertEqual(payload.title, "Alice")
+        XCTAssertEqual(payload.body, "Landing in 10")
     }
 
-    @Test
-    func rejectsMalformedEnvelope() {
-        #expect(throws: RelayEnvelopeError.self) {
-            _ = try RelayEnvelopeDecoder().decode(line: "not json")
+    func testRejectsMalformedEnvelope() {
+        XCTAssertThrowsError(try RelayEnvelopeDecoder().decode(line: "not json")) { error in
+            XCTAssertEqual(error as? RelayEnvelopeError, .invalidEnvelope)
         }
     }
 
-    @Test
-    func rejectsEnvelopeWithoutMessagePayload() {
-        #expect(throws: RelayEnvelopeError.self) {
-            _ = try RelayEnvelopeDecoder().decode(line: #"{"event":"keepalive"}"#)
+    func testRejectsEnvelopeWithoutMessagePayload() {
+        XCTAssertThrowsError(try RelayEnvelopeDecoder().decode(line: #"{"event":"keepalive"}"#)) { error in
+            XCTAssertEqual(error as? RelayEnvelopeError, .missingMessage)
         }
     }
 }

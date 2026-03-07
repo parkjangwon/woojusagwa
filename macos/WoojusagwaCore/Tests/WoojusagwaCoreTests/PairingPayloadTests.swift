@@ -1,22 +1,19 @@
-import Foundation
-import Testing
+import XCTest
 @testable import WoojusagwaCore
 
-struct PairingPayloadTests {
-    @Test
-    func encodesDefaultPairingPayload() throws {
+final class PairingPayloadTests: XCTestCase {
+    func testEncodesDefaultPairingPayload() throws {
         let payload = try PairingPayload(topic: "ws_apple")
         let json = try payload.encodedJSONString()
 
-        #expect(json.contains("\"version\":1"))
-        #expect(json.contains("\"server\":\"https://ntfy.sh\""))
-        #expect(json.contains("\"topic\":\"ws_apple\""))
+        XCTAssertTrue(json.contains("\"version\":1"))
+        XCTAssertTrue(json.contains("\"server\":\"https://ntfy.sh\""))
+        XCTAssertTrue(json.contains("\"topic\":\"ws_apple\""))
     }
 
-    @Test
-    func rejectsBlankTopic() {
-        #expect(throws: PairingPayloadError.self) {
-            _ = try PairingPayload(topic: "   ")
+    func testRejectsBlankTopic() {
+        XCTAssertThrowsError(try PairingPayload(topic: "   ")) { error in
+            XCTAssertEqual(error as? PairingPayloadError, .blankTopic)
         }
     }
 }
