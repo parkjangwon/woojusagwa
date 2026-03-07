@@ -33,7 +33,7 @@ jobs:
           test -n "$ANDROID_SIGNING_STORE_PASSWORD"
           test -n "$ANDROID_SIGNING_KEY_ALIAS"
           test -n "$ANDROID_SIGNING_KEY_PASSWORD"
-          echo "$ANDROID_SIGNING_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/woojusagwa-release.jks"
+          printf '%s' "$ANDROID_SIGNING_KEYSTORE_BASE64" | base64 --decode --ignore-garbage > "$RUNNER_TEMP/woojusagwa-release.jks"
 
       - name: Test and Build Android
         env:
