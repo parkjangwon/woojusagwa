@@ -2,9 +2,9 @@ import XCTest
 @testable import WoojusagwaCore
 
 final class AppTextTests: XCTestCase {
-    func testUsesKoreanByDefault() {
+    func testFallsBackToKoreanWhenLanguageIsNotEnglish() {
         XCTAssertEqual(
-            AppText.pick(ko: "연결된 Mac", en: "Paired Macs", languageCode: nil),
+            AppText.pick(ko: "연결된 Mac", en: "Paired Macs", languageCode: "ja-JP"),
             "연결된 Mac"
         )
     }
