@@ -259,6 +259,12 @@ Release tag rules:
 - `dev-*`: prerelease
 - `v*`: full release
 
+Release version injection:
+
+- GitHub Actions derives the app version from the tag name.
+- Example: `v1.0.2` -> `versionName 1.0.2`, `versionCode 1000002`
+- Example: `dev-0.0.10` -> `versionName 0.0.10`, `versionCode 10`
+
 ## Repository Layout
 
 ```text

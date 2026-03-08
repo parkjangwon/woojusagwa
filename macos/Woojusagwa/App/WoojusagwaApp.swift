@@ -3,6 +3,7 @@ import SwiftUI
 @main
 struct WoojusagwaApp: App {
     @StateObject private var subscriber: NtfySubscriber
+    @StateObject private var launchAtLoginController: LaunchAtLoginController
 
     init() {
         let appLanguageStore = AppLanguageStore()
@@ -20,6 +21,11 @@ struct WoojusagwaApp: App {
                 appLanguageStore: appLanguageStore
             )
         )
+        _launchAtLoginController = StateObject(
+            wrappedValue: LaunchAtLoginController(
+                preferenceStore: LaunchAtLoginPreferenceStore()
+            )
+        )
     }
     
     var body: some Scene {
@@ -31,7 +37,10 @@ struct WoojusagwaApp: App {
             ),
             systemImage: "message.badge.waveform"
         ) {
-            MenuBarView(subscriber: subscriber)
+            MenuBarView(
+                subscriber: subscriber,
+                launchAtLoginController: launchAtLoginController
+            )
         }
         .menuBarExtraStyle(.window)
     }

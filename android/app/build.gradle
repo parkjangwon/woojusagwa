@@ -9,6 +9,8 @@ def releaseSigning = [
     keyAlias    : System.getenv("ANDROID_SIGNING_KEY_ALIAS"),
     keyPassword : System.getenv("ANDROID_SIGNING_KEY_PASSWORD"),
 ]
+def resolvedVersionName = System.getenv("WOOJUSAGWA_VERSION_NAME") ?: "0.0.0"
+def resolvedVersionCode = Integer.parseInt(System.getenv("WOOJUSAGWA_VERSION_CODE") ?: "0")
 def hasReleaseSigning = releaseSigning.values().every { value ->
     value != null && !value.trim().isEmpty()
 }
@@ -21,8 +23,8 @@ android {
         applicationId "org.parkjw.woojusagwa"
         minSdk 26
         targetSdk 34
-        versionCode 101
-        versionName "1.0.1"
+        versionCode resolvedVersionCode
+        versionName resolvedVersionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

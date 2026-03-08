@@ -15,6 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Resolve release version
+        run: |
+          python3 scripts/release_version.py "${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
       - name: set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -63,6 +66,9 @@ jobs:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
+      - name: Resolve release version
+        run: |
+          python3 scripts/release_version.py "${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
       
       - name: Test macOS Core
         run: |
@@ -83,6 +89,8 @@ jobs:
                      -configuration Release \
                      -derivedDataPath build \
                      -destination 'platform=macOS,arch=arm64' \
+                     MARKETING_VERSION="${WOOJUSAGWA_VERSION_NAME}" \
+                     CURRENT_PROJECT_VERSION="${WOOJUSAGWA_VERSION_CODE}" \
                      CODE_SIGNING_ALLOWED=NO
 
           mkdir -p build/dmg

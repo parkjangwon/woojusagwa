@@ -259,6 +259,12 @@ GitHub Actions는 아래 시크릿을 사용합니다.
 - `dev-*`: 프리릴리스
 - `v*`: 정식 릴리스
 
+릴리스 버전 주입:
+
+- GitHub Actions가 태그명에서 버전을 계산합니다.
+- 예: `v1.0.2` -> `versionName 1.0.2`, `versionCode 1000002`
+- 예: `dev-0.0.10` -> `versionName 0.0.10`, `versionCode 10`
+
 ## 저장소 구조
 
 ```text

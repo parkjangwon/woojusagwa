@@ -13,9 +13,11 @@
 		33D8805F83A6453AA3C7E13B /* MessageNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648A27C93A474C4DA22A5C2C /* MessageNotification.swift */; };
 		355D01E90C806E866C6106E5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 219808AD046235BC916429B5 /* Cocoa.framework */; };
 		460413F6706635F1E6267FD0 /* PairingPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3AE85470CDA16E4EACDB62 /* PairingPayload.swift */; };
+		4D2A0A3B1C9F4F67A0B7C011 /* LaunchAtLoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2A0A3B1C9F4F67A0B7C010 /* LaunchAtLoginController.swift */; };
 		59B81D64F3AC4AB6B0E66721 /* DeviceIdentityStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B81D64F3AC4AB6B0E66720 /* DeviceIdentityStore.swift */; };
 		59B81D64F3AC4AB6B0E66723 /* AppText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B81D64F3AC4AB6B0E66722 /* AppText.swift */; };
 		5D6EBD318F234A9F81C54A11 /* MenuBarSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6EBD318F234A9F81C54A10 /* MenuBarSummary.swift */; };
+		6C3B1C2D4E5F60718293A101 /* LaunchAtLoginPreferenceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C3B1C2D4E5F60718293A100 /* LaunchAtLoginPreferenceStore.swift */; };
 		71D965FE3C64DD05EA968E8B /* WoojusagwaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EECED1262731DB8CB5D5C257 /* WoojusagwaApp.swift */; };
 		AFDC313F4DE02F40813482F5 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2970C8D59BA6A767F0E4AAD0 /* NotificationManager.swift */; };
 		C6AE41BF1DA24CDFE4BA8CB3 /* PairingConfigurationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB1DFBEC0E54A8C29139234C /* PairingConfigurationStore.swift */; };
@@ -26,9 +28,11 @@
 		219808AD046235BC916429B5 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		2970C8D59BA6A767F0E4AAD0 /* NotificationManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotificationManager.swift; path = Notifications/NotificationManager.swift; sourceTree = "<group>"; };
 		2A3739875A6C7D64DEC11CA0 /* NtfySubscriber.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NtfySubscriber.swift; path = Relay/NtfySubscriber.swift; sourceTree = "<group>"; };
+		4D2A0A3B1C9F4F67A0B7C010 /* LaunchAtLoginController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LaunchAtLoginController.swift; path = App/LaunchAtLoginController.swift; sourceTree = "<group>"; };
 		59B81D64F3AC4AB6B0E66720 /* DeviceIdentityStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DeviceIdentityStore.swift; path = ../WoojusagwaCore/Sources/WoojusagwaCore/DeviceIdentityStore.swift; sourceTree = "<group>"; };
 		59B81D64F3AC4AB6B0E66722 /* AppText.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppText.swift; path = ../WoojusagwaCore/Sources/WoojusagwaCore/AppText.swift; sourceTree = "<group>"; };
 		5D6EBD318F234A9F81C54A10 /* MenuBarSummary.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MenuBarSummary.swift; path = ../WoojusagwaCore/Sources/WoojusagwaCore/MenuBarSummary.swift; sourceTree = "<group>"; };
+		6C3B1C2D4E5F60718293A100 /* LaunchAtLoginPreferenceStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LaunchAtLoginPreferenceStore.swift; path = ../WoojusagwaCore/Sources/WoojusagwaCore/LaunchAtLoginPreferenceStore.swift; sourceTree = "<group>"; };
 		A19A4A8F4B2E4A8FB2231201 /* Woojusagwa.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Resources/Woojusagwa.icns; sourceTree = "<group>"; };
 		648A27C93A474C4DA22A5C2C /* MessageNotification.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MessageNotification.swift; path = ../WoojusagwaCore/Sources/WoojusagwaCore/MessageNotification.swift; sourceTree = "<group>"; };
 		7E0655963985EAAB3F88228D /* RelayEnvelope.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RelayEnvelope.swift; path = ../WoojusagwaCore/Sources/WoojusagwaCore/RelayEnvelope.swift; sourceTree = "<group>"; };
@@ -108,6 +112,7 @@
 				648A27C93A474C4DA22A5C2C /* MessageNotification.swift */,
 				59B81D64F3AC4AB6B0E66722 /* AppText.swift */,
 				5D6EBD318F234A9F81C54A10 /* MenuBarSummary.swift */,
+				6C3B1C2D4E5F60718293A100 /* LaunchAtLoginPreferenceStore.swift */,
 				59B81D64F3AC4AB6B0E66720 /* DeviceIdentityStore.swift */,
 				DD3AE85470CDA16E4EACDB62 /* PairingPayload.swift */,
 				7E0655963985EAAB3F88228D /* RelayEnvelope.swift */,
@@ -124,6 +129,7 @@
 				3A1A73DADAF4EA6A845BC180 /* UI */,
 				002F6A06A03AF30BC63E6251 /* Resources */,
 				EECED1262731DB8CB5D5C257 /* WoojusagwaApp.swift */,
+				4D2A0A3B1C9F4F67A0B7C010 /* LaunchAtLoginController.swift */,
 				2970C8D59BA6A767F0E4AAD0 /* NotificationManager.swift */,
 				2A3739875A6C7D64DEC11CA0 /* NtfySubscriber.swift */,
 				C96A1210C10FB76FFB3706D1 /* MenuBarView.swift */,
@@ -219,12 +225,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				71D965FE3C64DD05EA968E8B /* WoojusagwaApp.swift in Sources */,
+				4D2A0A3B1C9F4F67A0B7C011 /* LaunchAtLoginController.swift in Sources */,
 				AFDC313F4DE02F40813482F5 /* NotificationManager.swift in Sources */,
 				2CAA6B35803E4FE59516B7EB /* NtfySubscriber.swift in Sources */,
 				300C85EE4E96F76590BB3DCC /* MenuBarView.swift in Sources */,
 				33D8805F83A6453AA3C7E13B /* MessageNotification.swift in Sources */,
 				59B81D64F3AC4AB6B0E66723 /* AppText.swift in Sources */,
 				5D6EBD318F234A9F81C54A11 /* MenuBarSummary.swift in Sources */,
+				6C3B1C2D4E5F60718293A101 /* LaunchAtLoginPreferenceStore.swift in Sources */,
 				59B81D64F3AC4AB6B0E66721 /* DeviceIdentityStore.swift in Sources */,
 				460413F6706635F1E6267FD0 /* PairingPayload.swift in Sources */,
 				D675843F39B3D8403D44D583 /* RelayEnvelope.swift in Sources */,
@@ -244,8 +252,10 @@
 				ENABLE_HARDENED_RUNTIME = NO;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Resources/Info.plist;
+				CURRENT_PROJECT_VERSION = 0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 0.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.parkjw.woojusagwa.macos;
 				PRODUCT_NAME = Woojusagwa;
 				SDKROOT = macosx;
@@ -380,8 +390,10 @@
 				ENABLE_HARDENED_RUNTIME = NO;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Resources/Info.plist;
+				CURRENT_PROJECT_VERSION = 0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 0.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.parkjw.woojusagwa.macos;
 				PRODUCT_NAME = Woojusagwa;
 				SDKROOT = macosx;

@@ -4,6 +4,7 @@ import CoreImage.CIFilterBuiltins
 
 struct MenuBarView: View {
     @ObservedObject var subscriber: NtfySubscriber
+    @ObservedObject var launchAtLoginController: LaunchAtLoginController
     @State private var showingQR = false
     @State private var pairingPayload = ""
     @State private var pairingError = ""
@@ -22,6 +23,7 @@ struct MenuBarView: View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .leading, spacing: 12) {
                 headerPanel
+                launchAtLoginPanel
                 connectionPanel
 
                 ForEach(summary.sections) { section in
@@ -44,7 +46,47 @@ struct MenuBarView: View {
         .frame(maxHeight: 660)
         .onAppear {
             subscriber.refreshNotificationAuthorizationStatus()
+            launchAtLoginController.refresh()
         }
+    }
+
+    private var launchAtLoginPanel: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top, spacing: 12) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(AppText.pick(ko: "로그인 시 자동 실행", en: "Launch at Login"))
+                        .font(.system(size: 12, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color(nsColor: .labelColor))
+
+                    Text(AppText.pick(
+                        ko: "로그인하면 우주사과를 자동으로 열어 메뉴바에서 바로 대기합니다.",
+                        en: "Start Woojusagwa automatically after login and keep it ready in the menu bar."
+                    ))
+                    .font(.system(size: 10, weight: .regular, design: .rounded))
+                    .foregroundStyle(Color(nsColor: .secondaryLabelColor))
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+
+                Spacer(minLength: 10)
+
+                Toggle(
+                    "",
+                    isOn: Binding(
+                        get: { launchAtLoginController.isEnabled },
+                        set: { launchAtLoginController.setEnabled($0) }
+                    )
+                )
+                .labelsHidden()
+                .toggleStyle(.switch)
+            }
+
+            Text(launchAtLoginController.statusText)
+                .font(.system(size: 10, weight: .medium, design: .rounded))
+                .foregroundStyle(Color(nsColor: .tertiaryLabelColor))
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(12)
+        .menuPanel(fill: Color(nsColor: .controlBackgroundColor))
     }
 
     private var headerPanel: some View {
@@ -171,45 +213,88 @@ struct MenuBarView: View {
 
     private var actionPanel: some View {
         VStack(alignment: .leading, spacing: 10) {
-            actionButton(
-                AppText.pick(ko: "새 페어링 QR 만들기", en: "Create New Pairing QR"),
-                style: .prominent,
+            VStack(alignment: .leading, spacing: 3) {
+                Text(AppText.pick(ko: "빠른 작업", en: "Quick Actions"))
+                    .font(.system(size: 11, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color(nsColor: .secondaryLabelColor))
+
+                Text(AppText.pick(
+                    ko: "페어링, 테스트, 권한 점검을 여기서 바로 처리합니다.",
+                    en: "Handle pairing, testing, and permission checks from here."
+                ))
+                .font(.system(size: 11, weight: .regular, design: .rounded))
+                .foregroundStyle(Color(nsColor: .tertiaryLabelColor))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            primaryActionButton(
+                title: AppText.pick(ko: "새 페어링 QR 만들기", en: "Create New Pairing QR"),
+                subtitle: AppText.pick(
+                    ko: "이 Mac의 새 토픽과 QR을 즉시 생성합니다.",
+                    en: "Generate a fresh topic and QR for this Mac."
+                ),
+                systemImage: "qrcode.viewfinder",
                 action: generatePairingPayload
             )
 
-            HStack(spacing: 10) {
-                actionButton(
-                    AppText.pick(ko: "테스트 알림", en: "Send Test Notification"),
-                    style: .bordered
+            LazyVGrid(
+                columns: [
+                    GridItem(.flexible(), spacing: 10),
+                    GridItem(.flexible(), spacing: 10),
+                ],
+                spacing: 10
+            ) {
+                secondaryActionButton(
+                    title: AppText.pick(ko: "테스트 알림", en: "Test Notification"),
+                    subtitle: AppText.pick(
+                        ko: "알림센터 경로를 확인합니다.",
+                        en: "Check Notification Center delivery."
+                    ),
+                    systemImage: "bell.badge",
+                    tone: .accent
                 ) {
                     subscriber.sendTestNotification()
                 }
 
-                actionButton(
-                    AppText.pick(ko: "권한 다시 확인", en: "Check Permissions Again"),
-                    style: .bordered
+                secondaryActionButton(
+                    title: AppText.pick(ko: "권한 다시 확인", en: "Check Permissions"),
+                    subtitle: AppText.pick(
+                        ko: "현재 알림 권한 상태를 새로 읽습니다.",
+                        en: "Refresh the current notification permission state."
+                    ),
+                    systemImage: "checkmark.shield",
+                    tone: .neutral
                 ) {
                     subscriber.requestNotificationAuthorization()
                 }
-            }
 
-            HStack(spacing: 10) {
-                actionButton(
-                    AppText.pick(ko: "알림 설정 열기", en: "Open Notification Settings"),
-                    style: .bordered
+                secondaryActionButton(
+                    title: AppText.pick(ko: "알림 설정 열기", en: "Open Notification Settings"),
+                    subtitle: AppText.pick(
+                        ko: "시스템 알림 설정으로 이동합니다.",
+                        en: "Open the macOS notification settings."
+                    ),
+                    systemImage: "gearshape",
+                    tone: .neutral
                 ) {
                     subscriber.openNotificationSettings()
                 }
 
-                Button(AppText.pick(ko: "종료", en: "Quit")) {
+                secondaryActionButton(
+                    title: AppText.pick(ko: "종료", en: "Quit"),
+                    subtitle: AppText.pick(
+                        ko: "우주사과를 완전히 종료합니다.",
+                        en: "Terminate the menu bar app."
+                    ),
+                    systemImage: "xmark.circle",
+                    tone: .critical
+                ) {
                     NSApplication.shared.terminate(nil)
                 }
-                .buttonStyle(.borderless)
-                .foregroundStyle(Color(nsColor: .secondaryLabelColor))
-                .frame(maxWidth: .infinity, alignment: .trailing)
             }
         }
-        .padding(.top, 2)
+        .padding(14)
+        .menuPanel(fill: Color(nsColor: .windowBackgroundColor))
     }
 
     private var qrPanel: some View {
@@ -330,23 +415,90 @@ struct MenuBarView: View {
         }
     }
 
-    @ViewBuilder
-    private func actionButton(
-        _ title: String,
-        style: ActionButtonStyle,
+    private func primaryActionButton(
+        title: String,
+        subtitle: String,
+        systemImage: String,
         action: @escaping () -> Void
     ) -> some View {
-        if style == .prominent {
-            Button(title, action: action)
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
-                .frame(maxWidth: .infinity)
-        } else {
-            Button(title, action: action)
-                .buttonStyle(.bordered)
-                .controlSize(.large)
-                .frame(maxWidth: .infinity)
+        Button(action: action) {
+            HStack(spacing: 12) {
+                Image(systemName: systemImage)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .frame(width: 30, height: 30)
+                    .background(
+                        RoundedRectangle(cornerRadius: 9, style: .continuous)
+                            .fill(Color.white.opacity(0.14))
+                    )
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.system(size: 13, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.white)
+                    Text(subtitle)
+                        .font(.system(size: 10, weight: .medium, design: .rounded))
+                        .foregroundStyle(Color.white.opacity(0.86))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                Spacer(minLength: 8)
+
+                Image(systemName: "arrow.up.right")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(Color.white.opacity(0.86))
+            }
+            .padding(14)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .buttonStyle(.plain)
+        .menuPanel(
+            fill: Color(nsColor: .controlAccentColor).opacity(0.92),
+            stroke: Color(nsColor: .controlAccentColor).opacity(0.42)
+        )
+    }
+
+    private func secondaryActionButton(
+        title: String,
+        subtitle: String,
+        systemImage: String,
+        tone: SecondaryActionTone,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            VStack(alignment: .leading, spacing: 10) {
+                Image(systemName: systemImage)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(tone.accentColor)
+                    .frame(width: 30, height: 30)
+                    .background(
+                        Circle()
+                            .fill(tone.accentColor.opacity(0.12))
+                    )
+
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(title)
+                        .font(.system(size: 12, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color(nsColor: .labelColor))
+                        .multilineTextAlignment(.leading)
+
+                    Text(subtitle)
+                        .font(.system(size: 10, weight: .regular, design: .rounded))
+                        .foregroundStyle(Color(nsColor: .secondaryLabelColor))
+                        .fixedSize(horizontal: false, vertical: true)
+                        .multilineTextAlignment(.leading)
+                }
+
+                Spacer(minLength: 0)
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity, minHeight: 108, alignment: .topLeading)
+        }
+        .buttonStyle(.plain)
+        .menuPanel(
+            fill: tone.fillColor,
+            stroke: tone.borderColor
+        )
     }
 
     private func generateQRCode(from string: String) -> NSImage {
@@ -363,9 +515,43 @@ struct MenuBarView: View {
     }
 }
 
-private enum ActionButtonStyle {
-    case prominent
-    case bordered
+private enum SecondaryActionTone {
+    case neutral
+    case accent
+    case critical
+
+    var accentColor: Color {
+        switch self {
+        case .neutral:
+            return Color(nsColor: .secondaryLabelColor)
+        case .accent:
+            return Color(nsColor: .controlAccentColor)
+        case .critical:
+            return Color(nsColor: .systemRed)
+        }
+    }
+
+    var fillColor: Color {
+        switch self {
+        case .neutral:
+            return Color(nsColor: .controlBackgroundColor)
+        case .accent:
+            return Color(nsColor: .controlAccentColor).opacity(0.08)
+        case .critical:
+            return Color(nsColor: .systemRed).opacity(0.08)
+        }
+    }
+
+    var borderColor: Color {
+        switch self {
+        case .neutral:
+            return Color(nsColor: .separatorColor).opacity(0.20)
+        case .accent:
+            return Color(nsColor: .controlAccentColor).opacity(0.20)
+        case .critical:
+            return Color(nsColor: .systemRed).opacity(0.22)
+        }
+    }
 }
 
 private extension View {
