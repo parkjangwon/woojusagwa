@@ -28,7 +28,9 @@
     <string>public.app-category.utilities</string>
     <key>LSUIElement</key>
     <true/>
+    <key>NSQuitAlwaysKeepsWindows</key>
+    <false/>
     <key>NSSupportsAutomaticTermination</key>
-    <true/>
+    <false/>
 </dict>
 </plist>

@@ -1,17 +1,33 @@
-import SwiftUI
 import AppKit
 import Combine
+import OSLog
+import SwiftUI
 
 @main
-struct WoojusagwaApp: App {
-    private let subscriber: NtfySubscriber
-    private let launchAtLoginController: LaunchAtLoginController
+private enum WoojusagwaMain {
+    static func main() {
+        let app = NSApplication.shared
+        let delegate = AppDelegate()
+        app.delegate = delegate
+        app.setActivationPolicy(.accessory)
+        app.run()
+    }
+}
 
-    init() {
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    private let logger = Logger(subsystem: "org.parkjw.woojusagwa.macos", category: "AppDelegate")
+    private var subscriber: NtfySubscriber?
+    private var launchAtLoginController: LaunchAtLoginController?
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        NSApp.setActivationPolicy(.accessory)
+        logger.info("Woojusagwa did finish launching")
+
         let appLanguageStore = AppLanguageStore()
         AppText.preferredLanguageCodeProvider = {
             appLanguageStore.currentLanguage().tag
         }
+
         let notificationManager = NotificationManager()
         let pairingStore = PairingConfigurationStore()
         let deviceIdentityStore = DeviceIdentityStore()
@@ -24,11 +40,12 @@ struct WoojusagwaApp: App {
         let launchAtLoginController = LaunchAtLoginController(
             preferenceStore: LaunchAtLoginPreferenceStore()
         )
+
         self.subscriber = subscriber
         self.launchAtLoginController = launchAtLoginController
 
-        // macOS 26.4 can fail to present MenuBarExtra window scenes for LSUIElement apps.
-        // Drive the menu bar UI with NSStatusItem + NSPopover directly to keep the panel reliable.
+        // Keep the app fully menubar-only. Using a SwiftUI Settings scene here
+        // can restore an empty preferences window after login or restart.
         DispatchQueue.main.async {
             MenuBarController.shared.install(
                 content: MenuBarView(
@@ -40,18 +57,18 @@ struct WoojusagwaApp: App {
         }
     }
 
-    var body: some Scene {
-        Settings {
-            EmptyView()
-        }
+    func applicationWillTerminate(_ notification: Notification) {
+        subscriber?.disconnect()
     }
 }
 
 private final class MenuBarController: NSObject {
     static let shared = MenuBarController()
 
+    private let logger = Logger(subsystem: "org.parkjw.woojusagwa.macos", category: "MenuBarController")
     private let popover = NSPopover()
     private var statusItem: NSStatusItem?
+    private var installAttempts = 0
     private var languageObserver: AnyCancellable?
 
     private override init() {
@@ -61,9 +78,11 @@ private final class MenuBarController: NSObject {
     }
 
     func install<Content: View>(content: Content, subscriber: NtfySubscriber) {
-        let statusItem = statusItem ?? NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        let statusItem = statusItem ?? NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        // Preserve the identity used by the previous SwiftUI MenuBarExtra so
+        // macOS/Bartender do not treat the replacement as a brand-new item.
+        statusItem.autosaveName = NSStatusItem.AutosaveName("Item-0")
         self.statusItem = statusItem
-        configureButton(for: statusItem)
 
         let hostingController = NSHostingController(rootView: AnyView(content))
         hostingController.view.frame = NSRect(x: 0, y: 0, width: 372, height: 660)
@@ -76,11 +95,27 @@ private final class MenuBarController: NSObject {
                 self?.updateButtonLocalization(languageCode: language.tag)
             }
 
-        updateButtonLocalization(languageCode: subscriber.selectedLanguage.tag)
+        installAttempts = 0
+        logger.info("Installing status item with autosaveName=\(statusItem.autosaveName ?? "nil", privacy: .public)")
+        configureButtonWhenReady(languageCode: subscriber.selectedLanguage.tag)
     }
 
-    private func configureButton(for statusItem: NSStatusItem) {
+    private func configureButtonWhenReady(languageCode: String) {
+        guard let statusItem else {
+            return
+        }
+
         guard let button = statusItem.button else {
+            guard installAttempts < 5 else {
+                logger.error("Status item button was not available after \(self.installAttempts, privacy: .public) retries")
+                return
+            }
+
+            installAttempts += 1
+            logger.warning("Status item button unavailable, retry=\(self.installAttempts, privacy: .public)")
+            DispatchQueue.main.async { [weak self] in
+                self?.configureButtonWhenReady(languageCode: languageCode)
+            }
             return
         }
 
@@ -90,10 +125,25 @@ private final class MenuBarController: NSObject {
         )
         image?.isTemplate = true
 
+        statusItem.length = NSStatusItem.variableLength
+        statusItem.isVisible = true
+        button.identifier = NSUserInterfaceItemIdentifier("org.parkjw.woojusagwa.macos.statusItem")
+        button.font = .systemFont(ofSize: 12, weight: .semibold)
+        button.isEnabled = true
+        button.isHidden = false
+        button.appearsDisabled = false
+        button.title = AppText.pick(
+            ko: "우주",
+            en: "WS",
+            languageCode: languageCode
+        )
         button.image = image
+        button.imagePosition = image == nil ? .noImage : .imageLeading
         button.target = self
         button.action = #selector(togglePopover(_:))
         button.sendAction(on: [.leftMouseUp, .rightMouseUp])
+        updateButtonLocalization(languageCode: languageCode)
+        logger.info("Status item configured title=\(button.title, privacy: .public) hasImage=\(button.image != nil, privacy: .public) visible=\(statusItem.isVisible, privacy: .public)")
     }
 
     private func updateButtonLocalization(languageCode: String) {
